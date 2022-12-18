@@ -1,0 +1,37 @@
+2022-12-17T14:29:21+00:00 DEBUG POST: https://ads.tiktok.com/marketing_api/api/developer/app/create_auto_approve/
+
+{"business_platform":"PROD","smb_id":"tt4b_woocommerce_639dd2417ac39httplocalhostecomwp-admin","smb_name":"PROD","redirect_url":"http:\/\/localhost\/ecom\/wp-admin\/"}
+ ajax: DOING_AJAX
+2022-12-17T14:29:26+00:00 ERROR Tt4b_Mapi_Class::create_open_source_app: Response: 
+
+http_request_failed: cURL error 28: Operation timed out after 5008 milliseconds with 0 bytes received
+
+2022-12-17T14:29:26+00:00 DEBUG Tt4b_Mapi_Class::create_open_source_app: Response: 
+
+HTTP/1.1 200 OK
+Server: nginx
+Content-Type: application/json
+X-Tt-Logid: 20221217142927C712ACAA73DD360F02C2,20221217142927C712ACAA73DD360F02C2
+Server-Timing: inner; dur=85
+x-tt-trace-host: 0163176e3b3e0eb3daf84f936ca9d61810fe53f81e83cb1275958e109c56c4ce03dd16fea8248a52ba7b85fbfea0e8249c65939f0ecbb81ea34ec88d0d4986866b1aaff9637908ac25c9c7fd679cc5e5fb4db2fc8b5f7215603a02791e22f8cf35
+Content-Encoding: gzip
+Date: Sat, 17 Dec 2022 14:29:28 GMT
+Content-Length: 204
+X-Cache: TCP_MISS from a184-26-54-173.deploy.akamaitechnologies.com (AkamaiGHost/10.10.3-45298580) (-)
+Connection: close
+Vary: Accept-Encoding
+x-tt-trace-tag: id=16;cdn-cache=miss;type=dyn
+Server-Timing: cdn-cache; desc=MISS, edge; dur=4, origin; dur=136
+X-Origin-Response-Time: 137,184.26.54.173
+X-Akamai-Request-ID: 1a162ba3
+
+{"code":0,"msg":"ok","data":{"redirect_uri":"http:\/\/localhost\/ecom\/wp-admin\/","app_id":"7178124569880821762","external_data_key":"378c08cf-6a40-47c7-9d93-5ba2c5a46f1e","app_secret":"06865d84b4a8314336fdd1f55f7047abd5aff81e"}}
+
+2022-12-17T15:20:55+00:00 DEBUG tt4b_product_sync: missing access token for tt4b_product_sync
+2022-12-17T15:21:13+00:00 DEBUG tt4b_product_sync: missing access token for tt4b_product_sync
+2022-12-17T15:21:50+00:00 DEBUG tt4b_product_sync: missing access token for tt4b_product_sync
+2022-12-17T15:22:07+00:00 DEBUG tt4b_product_sync: missing access token for tt4b_product_sync
+2022-12-17T15:23:51+00:00 DEBUG tt4b_product_sync: missing access token for tt4b_product_sync
+2022-12-17T15:35:09+00:00 DEBUG tt4b_product_sync: missing access token for tt4b_product_sync
+2022-12-17T15:35:22+00:00 DEBUG Tt4b_Pixel_Class::inject_view_content_event: hit injectViewContentEvent
+2022-12-17T15:35:22+00:00 DEBUG Tt4b_Pixel_Class::inject_view_content_event: Missing option "access_token"
