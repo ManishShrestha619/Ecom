@@ -2299,7 +2299,6 @@ class ShopEngine_Filterable_Product_List extends \ShopEngine\Base\Widget {
 		);
 
 		$this->end_controls_section();
-
     }
 
 

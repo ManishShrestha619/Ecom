@@ -119,8 +119,8 @@ class Plugin_Data_Sender
             "themes"             => $this->themes,
             "plugins"            => $this->installedPlugins,
             "php_version"        => phpversion(),
-            "db_version"         => mysqli_get_client_version(),
-            "server_name"        => explode(' ', $_SERVER['SERVER_SOFTWARE'])[0],
+            "db_version"         => mysqli_get_client_version(), //phpcs:ignore WordPress.DB.RestrictedFunctions.mysql_mysqli_get_client_version
+            "server_name"        => !empty($_SERVER['SERVER_SOFTWARE']) ? explode(' ', sanitize_text_field(wp_unslash($_SERVER['SERVER_SOFTWARE'])))[0] : '', 
             "max_execution_time" => ini_get('max_execution_time'),
             "php_memory_size"    => ini_get('memory_limit'),
             "language"           => get_locale()

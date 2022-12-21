@@ -33,7 +33,7 @@ class Prod_Short_Code extends \WC_Shortcode_Products {
 		$settings = $this->settings;
 
 		if($settings['shopengine_paginate'] === 'yes') {
-
+			//phpcs:ignore WordPress.Security.NonceVerification.Recommended -- It's a fronted user part, not possible to verify nonce here
 			$page = empty( $_GET['product-page'] ) ? 1 : absint($_GET['product-page']);
 
 			if ($page > 1) {

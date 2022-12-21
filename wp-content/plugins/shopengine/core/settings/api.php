@@ -160,6 +160,7 @@ class Api extends \ShopEngine\Base\Api {
 			array_push($params, '%'. $wpdb->esc_like( $search ) .'%');
 		}
 		
+		//phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Already applied prepare method in top
 		$posts = $wpdb->get_results( $wpdb->prepare("SELECT * FROM $wpdb->posts WHERE post_type=%s AND post_status IN ($post_status) $post_search_statement LIMIT 10", $params) ); 
 		
 		$post_items = [];

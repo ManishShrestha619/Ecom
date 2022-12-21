@@ -1308,7 +1308,6 @@ class ShopEngine_Deal_Products extends \ShopEngine\Base\Widget {
 		);
 
 		$this->end_controls_section();
-
 	}
 
 	protected function screen() {

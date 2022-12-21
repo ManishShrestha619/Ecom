@@ -483,6 +483,8 @@ return array(
     'Automattic\\WooCommerce\\GoogleListingsAndAds\\Utility\\ISOUtility' => $baseDir . '/src/Utility/ISOUtility.php',
     'Automattic\\WooCommerce\\GoogleListingsAndAds\\Validator\\GooglePriceConstraint' => $baseDir . '/src/Validator/GooglePriceConstraint.php',
     'Automattic\\WooCommerce\\GoogleListingsAndAds\\Validator\\GooglePriceConstraintValidator' => $baseDir . '/src/Validator/GooglePriceConstraintValidator.php',
+    'Automattic\\WooCommerce\\GoogleListingsAndAds\\Validator\\ImageUrlConstraint' => $baseDir . '/src/Validator/ImageUrlConstraint.php',
+    'Automattic\\WooCommerce\\GoogleListingsAndAds\\Validator\\ImageUrlConstraintValidator' => $baseDir . '/src/Validator/ImageUrlConstraintValidator.php',
     'Automattic\\WooCommerce\\GoogleListingsAndAds\\Validator\\Validatable' => $baseDir . '/src/Validator/Validatable.php',
     'Automattic\\WooCommerce\\GoogleListingsAndAds\\Value\\ArrayWithRequiredKeys' => $baseDir . '/src/Value/ArrayWithRequiredKeys.php',
     'Automattic\\WooCommerce\\GoogleListingsAndAds\\Value\\BuiltScriptDependencyArray' => $baseDir . '/src/Value/BuiltScriptDependencyArray.php',

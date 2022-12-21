@@ -883,7 +883,7 @@ class ShopEngine_Product_Image extends \ShopEngine\Base\Widget {
                class="shopengine-product-image-toggle position-<?php echo esc_attr($settings['shopengine_lightbox_icon_position']); ?>">
 				<?php Icons_Manager::render_icon($settings['shopengine_image_lightbox_icon'], ['aria-hidden' => 'true']); ?>
 			</button>
-			<?php echo \ShopEngine\Utils\Helper::render($this->view_render($settings)); ?>
+			<?php shopengine_content_render(\ShopEngine\Utils\Helper::render($this->view_render($settings)));?>
         </div>
 
 		<?php

@@ -926,21 +926,14 @@ class ShopEngine_Product_Category_Lists extends \ShopEngine\Base\Widget
 			]
 		);
 
-		
-		
-
 		$this->end_controls_section();
-		
 	}
 
 	protected function screen()
 	{
-
 		$settings = $this->get_settings_for_display();
 
 		extract($settings);
-
-		// var_dump($filter_content);
 
 		$tpl = Products::instance()->get_widget_template($this->get_name());
 

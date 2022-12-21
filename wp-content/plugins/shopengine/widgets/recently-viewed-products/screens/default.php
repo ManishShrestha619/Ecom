@@ -4,7 +4,7 @@
 
 		if (!empty($_COOKIE['shopengine_recent_viewed_product'])) {
 			
-			$product_ids = array_unique(explode(',', $_COOKIE['shopengine_recent_viewed_product']));
+			$product_ids = array_unique(explode(',', sanitize_text_field(wp_unslash($_COOKIE['shopengine_recent_viewed_product']))));
 			
 			// It is removing the current product id from the product ids
 			// If it is the single product template then only need to check it
@@ -18,7 +18,7 @@
 				}
 			}
 
-			$product_limit = isset($settings['products_per_page']) ? $settings['products_per_page'] : 6;
+			$product_limit = !empty($settings['products_per_page']) ? intval($settings['products_per_page']) : 6;
 
 			if (isset($settings['product_order']) && $settings['product_order'] == 'ASC') {
 

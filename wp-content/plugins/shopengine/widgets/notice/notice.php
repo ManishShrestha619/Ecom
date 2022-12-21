@@ -12,9 +12,7 @@ class ShopEngine_Notice extends \ShopEngine\Base\Widget {
 		return new ShopEngine_Notice_Config();
 	}
 
-	protected function register_controls() {
-
-	}
+	protected function register_controls() { }
 
 	protected function screen() {
 		$tpl = Products::instance()->get_widget_template($this->get_name());

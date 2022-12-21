@@ -24,7 +24,8 @@ abstract class Widget extends \Elementor\Widget_Base {
 			return true;
 		}
 
-		$current_template_id = (int)((isset($_GET['action']) && $_GET['action'] == 'elementor' && !empty($_GET['post']) ) ? $_GET['post'] : get_the_ID());
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- It's a fronted user part, not possible to verify nonce here
+		$current_template_id = (int)((isset($_GET['action']) && sanitize_text_field(wp_unslash($_GET['action'])) == 'elementor' && !empty($_GET['post']) ) ? sanitize_text_field(wp_unslash($_GET['post'])) : get_the_ID());
 
 		$current_template = Products::instance()->get_template_type_by_id($current_template_id);
 
@@ -43,7 +44,9 @@ abstract class Widget extends \Elementor\Widget_Base {
 
 	public function render() {
 		$this->shopengine_widget_before_render();
-		$this->screen();
+		if( !is_null(WC()->cart) ) {
+			$this->screen();
+		}
 		$this->shopengine_widget_after_render();
 	}
 

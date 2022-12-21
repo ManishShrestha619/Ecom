@@ -134,6 +134,7 @@ class Shop extends \WC_Shortcode_Products {
 		} // End if().
 
 		if('yes' === $settings['paginate']) {
+			//phpcs:ignore WordPress.Security.NonceVerification.Recommended -- It's a fronted user part, not possible to verify nonce here
 			$page = empty($_GET['product-page']) ? 1 : absint($_GET['product-page']);
 
 			if(1 < $page) {

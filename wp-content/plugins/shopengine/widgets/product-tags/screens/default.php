@@ -1,4 +1,8 @@
-<?php defined('ABSPATH') || exit;
+<?php
+
+use ShopEngine\Utils\Helper;
+
+ defined('ABSPATH') || exit;
 
 $post_type = get_post_type();
 
@@ -23,7 +27,7 @@ if(!has_term('', 'product_tag', $product->get_id())) {
 
 	<?php endif;
 
-	echo wc_get_product_tag_list($product->get_id(), ', ', '<span class="product-tags-links">', '</span>');
+	echo wp_kses(wc_get_product_tag_list($product->get_id(), ', ', '<span class="product-tags-links">', '</span>'), Helper::get_kses_array());
 
 	do_action('woocommerce_product_meta_end'); ?>
 

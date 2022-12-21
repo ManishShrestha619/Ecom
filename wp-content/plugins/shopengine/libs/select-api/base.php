@@ -165,8 +165,7 @@ class Base extends \ShopEngine\Base\Api {
             $search = $this->request['s'];
         }
 
-        $query      = "SELECT * FROM {$wpdb->prefix}woocommerce_attribute_taxonomies WHERE attribute_name LIKE '%{$search}%' ORDER BY attribute_name ASC LIMIT 10";
-        $attributes = $wpdb->get_results($query);
+        $attributes = $wpdb->get_results($wpdb->prepare("SELECT * FROM {$wpdb->prefix}woocommerce_attribute_taxonomies WHERE attribute_name LIKE %s ORDER BY attribute_name ASC LIMIT 10", "%{$search}%"));
 
         $options = [];
 

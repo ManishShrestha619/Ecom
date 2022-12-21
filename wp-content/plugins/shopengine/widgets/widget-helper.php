@@ -60,7 +60,6 @@ class Widget_Helper {
 			}
 
 			return $template;
-
 		}, 999);
 	}
 

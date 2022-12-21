@@ -81,6 +81,9 @@ class Menu {
   /** @var FeaturesController */
   private $featuresController;
 
+  /** @var Changelog */
+  private $changelog;
+
   public function __construct(
     AccessControl $accessControl,
     WPFunctions $wp,
@@ -88,7 +91,8 @@ class Menu {
     ContainerWrapper $container,
     Router $router,
     CustomFonts $customFonts,
-    FeaturesController $featuresController
+    FeaturesController $featuresController,
+    Changelog $changelog
   ) {
     $this->accessControl = $accessControl;
     $this->wp = $wp;
@@ -97,6 +101,7 @@ class Menu {
     $this->router = $router;
     $this->customFonts = $customFonts;
     $this->featuresController = $featuresController;
+    $this->changelog = $changelog;
   }
 
   public function init() {
@@ -187,6 +192,26 @@ class Menu {
       30
     );
 
+    // Welcome wizard page
+    $this->wp->addSubmenuPage(
+      true,
+      $this->setPageTitle(__('Welcome Wizard', 'mailpoet')),
+      esc_html__('Welcome Wizard', 'mailpoet'),
+      AccessControl::PERMISSION_ACCESS_PLUGIN_ADMIN,
+      self::WELCOME_WIZARD_PAGE_SLUG,
+      [
+        $this,
+        'welcomeWizard',
+      ]
+    );
+
+    // Hide sub-menu entries if the user still needs to complete the Welcome Wizard
+    if (!$this->changelog->shouldShowWelcomeWizard()) {
+      $this->registerMailPoetSubMenuEntries();
+    }
+  }
+
+  private function registerMailPoetSubMenuEntries() {
     // Homepage
     if ($this->featuresController->isSupported(FeaturesController::FEATURE_HOMEPAGE)) {
       $this->wp->addSubmenuPage(
@@ -424,19 +449,6 @@ class Menu {
       ]
     );
 
-    // Welcome wizard page
-    $this->wp->addSubmenuPage(
-      true,
-      $this->setPageTitle(__('Welcome Wizard', 'mailpoet')),
-      esc_html__('Welcome Wizard', 'mailpoet'),
-      AccessControl::PERMISSION_ACCESS_PLUGIN_ADMIN,
-      self::WELCOME_WIZARD_PAGE_SLUG,
-      [
-        $this,
-        'welcomeWizard',
-      ]
-    );
-
     // WooCommerce Setup
     $this->wp->addSubmenuPage(
       true,
@@ -460,7 +472,7 @@ class Menu {
       [$this, 'experimentalFeatures']
     );
 
-    // display loggs page
+    // display logs page
     $this->wp->addSubmenuPage(
       true,
       $this->setPageTitle(__('Logs', 'mailpoet')),
@@ -469,7 +481,6 @@ class Menu {
       self::LOGS_PAGE_SLUG,
       [$this, 'logs']
     );
-
   }
 
   private function registerAutomationMenu() {

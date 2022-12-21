@@ -108,14 +108,15 @@ final class Plugin {
 			if(class_exists('ShopEngine_Pro')) {
 				new Updater();
 			}
+			new \ShopEngine\Compatibility\Migrations\Direct_Checkout;
 		});
 
 
 		add_action('wp_loaded', function () {
-
+			//phpcs:ignore WordPress.Security.NonceVerification.Recommended --It's a fronted user part, not possible to verify nonce here
 			if(isset($_REQUEST['preview']) && $_REQUEST['preview'] == 'true' && !empty($_REQUEST['preview_id'])) {
 
-				$pid = (int)$_REQUEST['preview_id'];
+				$pid = (int)$_REQUEST['preview_id']; //phpcs:ignore WordPress.Security.NonceVerification.Recommended -- It's a fronted user part, not possible to verify nonce here
 
 				$po = get_post($pid);
 
@@ -259,7 +260,7 @@ final class Plugin {
 
 		if(isset($_COOKIE[$cookie_name])) {
 
-			$cookie_ids  = $_COOKIE[$cookie_name];
+			$cookie_ids  = sanitize_text_field(wp_unslash($_COOKIE[$cookie_name]));
 			$product_ids = explode(',', $cookie_ids);
 
 			if(!is_array($product_ids)) {
@@ -349,10 +350,6 @@ final class Plugin {
 
 	public function missing_woocommerce() {
 
-		if(isset($_GET['activate'])) {
-			unset($_GET['activate']);
-		}
-
 		if(file_exists(WP_PLUGIN_DIR . '/woocommerce/woocommerce.php')) {
 
 			$btn['label'] = esc_html__('Activate WooCommerce', 'shopengine');
@@ -377,10 +374,6 @@ final class Plugin {
 
 
 	public function missing_elementor() {
-
-		if(isset($_GET['activate'])) {
-			unset($_GET['activate']);
-		}
 
 		if(file_exists(WP_PLUGIN_DIR . '/elementor/elementor.php')) {
 

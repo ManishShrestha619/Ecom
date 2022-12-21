@@ -1,4 +1,8 @@
-<?php defined('ABSPATH') || exit;
+<?php
+
+use ShopEngine\Utils\Helper;
+
+ defined('ABSPATH') || exit;
 
 $post_type = get_post_type();
 $product = \ShopEngine\Widgets\Products::instance()->get_product($post_type);
@@ -38,8 +42,8 @@ endif;
 		$stock_class = str_replace('_', '-', $stock_type);
 		$stock_text = isset($settings[$stock_type . '_text']) ? $settings[$stock_type . '_text'] : Self::stock_types()[$stock_type];
 		$stock_icon = isset($icons[$stock_type . '_icon']) ? $icons[$stock_type . '_icon'] : '';
-		
-		echo '<p class="' . $stock_class . '">' . $stock_icon . ' ' . $stock_text . '</p>';
+
+		shopengine_content_render('<p class="' . $stock_class . '">' . $stock_icon . ' ' . $stock_text . '</p>');
 
 	else : ?>
 		<p class="<?php echo esc_attr( isset($availability['class']) ? $availability['class'] : ''); ?>">
@@ -58,7 +62,7 @@ endif;
 			}
 			
 			$availability_html = $availability['availability'] ?? '';
-			echo apply_filters( 'woocommerce_stock_html', $stock_html, $availability_html, $product );
+			echo wp_kses(apply_filters( 'woocommerce_stock_html', $stock_html, $availability_html, $product ), Helper::get_kses_array());
 
 			?>
 

@@ -14,9 +14,9 @@ $editor_mode = ( \Elementor\Plugin::$instance->editor->is_edit_mode() || is_prev
 <div data-pagination="<?php echo esc_attr($shopengine_pagination_style) ?>"
      class="shopengine-archive-products <?php echo esc_attr($wrap_extra_class); ?>">
 	<?php
-
 	// add product description
 	add_action('woocommerce_after_shop_loop_item_title', function () use ($shopengine_is_details, $shopengine_group_btns, $shopengine_is_hover_details) {
+
 		if($shopengine_is_hover_details === 'yes') : ?>
             <div class="shopengine-product-description-footer">
 		<?php endif;
@@ -84,7 +84,7 @@ $editor_mode = ( \Elementor\Plugin::$instance->editor->is_edit_mode() || is_prev
 		);
 	}
 
-	$run_loop = $editor_mode ? true : woocommerce_product_loop() ;
+	$run_loop = $editor_mode ? true : woocommerce_product_loop();
 
 	if( $editor_mode ) {
 
@@ -100,7 +100,7 @@ $editor_mode = ( \Elementor\Plugin::$instance->editor->is_edit_mode() || is_prev
 		--wc-product-column : $columns;
 		}
 	    ";
-		echo "<style>$style</style>";
+		shopengine_content_render("<style>$style</style>");
 	}
 
 	if(wc_is_active_theme('kadence')):?>
@@ -131,8 +131,8 @@ $editor_mode = ( \Elementor\Plugin::$instance->editor->is_edit_mode() || is_prev
 					<li class="archive-product-container" data-tooltip="<?php echo esc_attr($tooltip); ?>">
 						<ul class="shopengine-archive-mode-grid">
 							<li class="shopengine-archive-products__left-image" >
-								<a title="<?php esc_html_e('Archive Product Left Image','shopengine')?>" href="<?php echo get_the_permalink(); ?>">
-									<?php echo woocommerce_get_product_thumbnail( get_the_id() ); ?>
+								<a title="<?php esc_html_e('Archive Product Left Image','shopengine')?>" href="<?php echo esc_url( get_the_permalink() ); ?>">
+								<?php shopengine_content_render( woocommerce_get_product_thumbnail( get_the_id() ) )?>
 								</a>
 							</li>
 

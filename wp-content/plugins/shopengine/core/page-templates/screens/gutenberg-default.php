@@ -1,8 +1,13 @@
 <?php
-get_header();
+if(wp_is_block_theme()){
+    wp_head();
+    block_header_area();
+}else{
+    get_header();
+}
 ?>
 
-<div class="gutenova-template-default">
+<div class="gutenova-template-default is-layout-constrained wp-block-group">
     <?php do_action('shopengine/builder/gutenberg/before-content'); ?>
 
     <?php do_action('shopengine/builder/gutenberg/simple'); ?>
@@ -11,4 +16,10 @@ get_header();
 </div>
 
 <?php 
-get_footer();
+if(wp_is_block_theme()){
+   wp_footer();
+   block_footer_area();
+}else{
+    get_footer();
+}
+

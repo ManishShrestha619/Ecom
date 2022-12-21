@@ -1641,8 +1641,7 @@ class ShopEngine_Up_Sells extends \ShopEngine\Base\Widget
 
 	protected function screen() {
 		$settings = $this->get_settings_for_display();
-
-		echo \ShopEngine\Utils\Helper::render($this->view_render($settings));
+		shopengine_content_render(\ShopEngine\Utils\Helper::render($this->view_render($settings)));
 	}
 
 	protected function view_render($settings = []) {

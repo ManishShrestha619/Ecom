@@ -29,7 +29,15 @@ if(!$product->get_sku()) {
 
                 <?php endif; ?>
 
-            <span class="sku-value"><?php echo ($sku = $product->get_sku()) ? $sku : esc_html__('N/A', 'shopengine'); ?></span>
+            <span class="sku-value">
+				<?php
+					if(empty( $product->get_sku())) {
+						echo esc_html__('N/A', 'shopengine');
+					} else {
+						echo esc_html($product->get_sku());
+					}
+				?>
+			</span>
                 
         </span>
 

@@ -21,7 +21,7 @@ $category_ids   = (isset($shopengine_product_cat_lists_cats) && !empty($shopengi
 
                     if (!empty($term)) : ?>
 
-                        <div class="single-cat-list-item" <?php echo $this->get_render_attribute_string('wrap-' . $key); ?>>
+                        <div class="single-cat-list-item" <?php echo esc_attr($this->get_render_attribute_string('wrap-' . $key)); ?>>
                             <div class="product-category-wrap">
                                 <div class="single-product-category">
                                     <a title="<?php echo esc_html($term->name, 'shopengine');?>" href="<?php echo esc_url(get_term_link($term)); ?>">
@@ -31,7 +31,7 @@ $category_ids   = (isset($shopengine_product_cat_lists_cats) && !empty($shopengi
 
                                         <?php if (isset($shopengine_product_cat_lists_show_count) && $shopengine_product_cat_lists_show_count == 'yes') : ?>
                                             <p class="cat-count">
-                                                <?php echo sprintf(_n('%s product', '%s products', $term->count, 'shopengine'), $term->count); ?>
+                                                <?php echo esc_html(sprintf(_n('%s product', '%s products', $term->count, 'shopengine'), $term->count)); ?>
                                             </p>
                                         <?php endif;
 

@@ -34,6 +34,17 @@ class Products {
 		return empty($prod[0]) ? false : $prod[0];
 	}
 
+	public function get_preview_product()
+	{
+		if(!empty($_GET['shopengine_product_id']) && !empty($_GET['shopengine_nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_GET['shopengine_nonce'])), 'wp_rest')) {
+			$args = sanitize_text_field(wp_unslash($_GET['shopengine_product_id']));
+			$product = wc_get_product($args);
+			if($product){
+				return $args;
+			}
+		}
+	}
+
 	/*
 	/ Get a any type of product.
 	*/
@@ -118,32 +129,29 @@ class Products {
 	 * @param $post_type
 	 * @return string
 	 */
-	public function get_product($post_type) {
+	public function get_product( $post_type )
+    {
+        global $product;
 
-		global $product;
+        if ( 'product' == $post_type ) {
+            return $product;
+        }
 
-		if('product' == $post_type) {
-			return $product;
-		}
+        if ( class_exists( "\Elementor\Plugin" ) && \Elementor\Plugin::$instance->editor->is_edit_mode() ) {
+            if ( !empty( $_SERVER['HTTP_REFERER'] ) ) {
+                parse_str( parse_url( sanitize_text_field( wp_unslash( $_SERVER['HTTP_REFERER'] ) ), PHP_URL_QUERY ), $params );
+                if ( !empty( $params['shopengine_product_id'] ) ) {
+                    $product = wc_get_product( $params['shopengine_product_id'] );
+                }
+            }
+        }
 
-		if(class_exists("\Elementor\Plugin") && \Elementor\Plugin::$instance->editor->is_edit_mode()) {
-			if(!empty($_REQUEST['shopengine_product_id'])) {
-				$product_id = sanitize_text_field ( wp_unslash( $_REQUEST['shopengine_product_id'] ) );
-				$product    = wc_get_product($product_id);
-			} else {
-				parse_str(parse_url($_SERVER['HTTP_REFERER'], PHP_URL_QUERY), $params);
-				if(!empty($params['shopengine_product_id'])) {
-					$product    = wc_get_product($params['shopengine_product_id']);
-				} else {
-					$product = $this->get_a_product();
-				}
-			}
-		} else {
-			$product = $this->get_a_product();
-		}
+        if ( empty( $product ) ) {
+            $product = $this->get_a_product();
+        }
 
-		return empty($product) ? new \stdClass() : $product;
-	}
+        return empty( $product ) ? new \stdClass() : $product;
+    }
 
 	/**
 	 * Just a workaround for gutenberg support fro server rendering

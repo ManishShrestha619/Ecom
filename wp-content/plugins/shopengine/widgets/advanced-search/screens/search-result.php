@@ -1,5 +1,8 @@
 <?php 
 
+if(empty($_GET['nonce']) || !wp_verify_nonce( sanitize_text_field(  wp_unslash( $_GET['nonce']) ), 'wp_rest')){
+    return;
+}
 
 if( !empty($_GET['s'])) {
 
@@ -7,19 +10,19 @@ if( !empty($_GET['s'])) {
         'orderby'        => 'date',
         'post_status'    => 'publish',
         'post_type'      => 'product',
-        's'              => sanitize_text_field( $_GET['s'] ),
+        's'              => sanitize_text_field( wp_unslash($_GET['s']) ),
         'posts_per_page' => 30,
     );
     
     if( !empty( $_GET['product_cat'])  ) {
 
-        $cats = explode(',', trim($_GET['product_cat'], ','));
+        $cats = explode(',', trim(sanitize_text_field( wp_unslash($_GET['product_cat'])), ','));
 
         $sanitized = array_map(function ($val){
 
             return intval($val);
-
-        }, $cats);
+        }, 
+        $cats);
 
 	    $product_query['tax_query'] = array(
 		    array(
@@ -35,11 +38,10 @@ if( !empty($_GET['s'])) {
 
 
     global $wpdb;
-    $category_query = "SELECT terms.* from {$wpdb->prefix}terms AS terms INNER JOIN {$wpdb->prefix}term_taxonomy AS term_taxonomy
-                ON terms.term_id = term_taxonomy.term_id WHERE term_taxonomy.taxonomy = 'product_cat'
-                AND terms.name LIKE '%".sanitize_text_field( $_GET['s'] )."%' LIMIT 5";
 
-    $categories = $wpdb->get_results($category_query);
+    $categories = $wpdb->get_results($wpdb->prepare("SELECT terms.* from {$wpdb->prefix}terms AS terms INNER JOIN {$wpdb->prefix}term_taxonomy AS term_taxonomy
+    ON terms.term_id = term_taxonomy.term_id WHERE term_taxonomy.taxonomy = 'product_cat'
+    AND terms.name LIKE %s LIMIT 5", '%'. sanitize_text_field( wp_unslash($_GET['s']) ) .'%'));
 }
 
 if( $products->have_posts() || !empty($categories)): ?>
@@ -53,16 +55,14 @@ if( $products->have_posts() || !empty($categories)): ?>
             <div class="shopengine-search-product__item--image">
                 <img src="<?php
                 $term_meta = get_term_meta($category->term_id);
-                $term_thumb_alt = trim( strip_tags( get_post_meta( $term_meta['thumbnail_id'][0], '_wp_attachment_image_alt', true ) ) );
-                
-                if(isset($term_meta['thumbnail_id'][0])) {
+                if(!empty($term_meta['thumbnail_id'][0])) {
                     $attachment = wp_get_attachment_image_src($term_meta['thumbnail_id'][0]);
                     echo isset($attachment[0]) ? esc_url($attachment[0]) : esc_url(wc_placeholder_img_src());
                 } else {
                     echo esc_url(wc_placeholder_img_src());
                 }
 
-                ?>" alt="<?php isset($term_meta['thumbnail_id'][0]) ? esc_attr_e($term_thumb_alt, 'shopengine') : ""; ?>">
+                ?>" alt="<?php echo isset($term_meta['thumbnail_id'][0]) ? esc_attr(trim( strip_tags( get_post_meta( $term_meta['thumbnail_id'][0], '_wp_attachment_image_alt', true ) ) ) ) : ""; ?>">
             </div>
 
             <?php $category_url = get_term_link($category->slug, 'product_cat'); ?>
@@ -112,15 +112,14 @@ if( $products->have_posts() || !empty($categories)): ?>
 
                         // review count
                         $review_count = $product->get_review_count();
-                        echo "<span class='rating-count'>(". $review_count .")</span>";
+                        echo "<span class='rating-count'>(". esc_html( $review_count ) .")</span>";
                     ?>
                 </div>
                 <div class="shopengine-search-product__item--price">
                     <?php echo wp_kses_post($product->get_price_html()); ?>
                 </div>
             </div>
-
-            <a title="<?php esc_html_e('Searching More Products','shopengine')?>" class="shopengine-search-more-btn" href="<?php echo get_the_permalink(); ?>"><i class="fas fa-chevron-right"></i></a>
+            <a title="<?php esc_html_e('Searching More Products','shopengine')?>" class="shopengine-search-more-btn" href="<?php echo esc_url(get_the_permalink()); ?>"><i class="fas fa-chevron-right"></i></a>
         </div>
 
     <?php 
@@ -132,7 +131,7 @@ if( $products->have_posts() || !empty($categories)): ?>
     ?>
 
     <div class="shopengine-search-product__item">
-        <a title="<?php esc_html_e('Searching a Products','shopengine')?>" class="shopengine-search-more-products" href="<?php echo get_the_permalink(get_option('woocommerce_shop_page_id')); ?>"><i class="fas fa-retweet"></i><?php echo esc_html__('More Products', 'shopengine'); ?></a>
+        <a title="<?php esc_html_e('Searching a Products','shopengine')?>" class="shopengine-search-more-products" href="<?php echo esc_url( get_the_permalink(get_option('woocommerce_shop_page_id')) ); ?>"><i class="fas fa-retweet"></i><?php echo esc_html__('More Products', 'shopengine'); ?></a>
     </div>
 
 </div>

@@ -3,7 +3,6 @@
 namespace ShopEngine\Core\Page_Templates\Hooks;
 
 use ShopEngine\Compatibility\Conflicts\Theme_Hooks;
-use ShopEngine\Core\Builders\Templates;
 
 defined('ABSPATH') || exit;
 
@@ -59,7 +58,7 @@ class Archive extends Base {
 
 
 	protected function template_include_pre_condition(): bool {
-
+		//phpcs:ignore WordPress.Security.NonceVerification.Recommended -- It's a fronted user part, not possible to verify nonce here
 		return is_product_category() || is_product_tag() || is_tax(get_object_taxonomies('product')) || (is_search() && !empty($_REQUEST['post_type']) && $_REQUEST['post_type'] == 'product');
 	}
 }

@@ -30,8 +30,10 @@ class Query_Modifier
         // query filter begins
 
         // update query for product per page filter
+        //phpcs:ignore WordPress.Security.NonceVerification.Recommended -- It's a fronted user part, not possible to verify nonce here
         if (!empty($_GET['shopengine_products_per_page'])) {
-            $query->set('posts_per_page', absint($_GET['shopengine_products_per_page']));
+            //phpcs:ignore WordPress.Security.NonceVerification.Recommended
+            $query->set('posts_per_page', absint(intval($_GET['shopengine_products_per_page'])));
         }
 
 
@@ -53,6 +55,7 @@ class Query_Modifier
 
         $meta_query = ['relation' => 'AND'];
 
+        //phpcs:ignore WordPress.Security.NonceVerification.Recommended -- It's a fronted user part, not possible to verify nonce here
         foreach ($_GET as $key => $value) {
 
             if ($key === 'rating_filter') {
@@ -128,14 +131,14 @@ class Query_Modifier
             $query->set('meta_query', $meta_query);
         }
 
-        $this->custom_query[] = [
+        $this->custom_query[] = apply_filters('shopengine-product-visibility-modifier', [
             'taxonomy'  => 'product_visibility',
             'terms'     => [ 'exclude-from-catalog' ],
             'field'     => 'name',
             'operator'  => 'NOT IN',
-        ];
+        ]);
 
-        $query->set('tax_query', $this->custom_query); 
+        $query->set('tax_query', apply_filters('shopengine-tax-query-modifier', $this->custom_query)); 
     }
 
     public function query($key, $prefix, $values, $query)

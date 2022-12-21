@@ -87,7 +87,7 @@ class Page_Templates {
 				'class'   => 'ShopEngine\Core\Page_Templates\Hooks\Single',
 				'opt_key' => 'single',
 				'css'     => 'single',
-				'url'     => get_permalink(Products::instance()->get_a_simple_product_id()),
+				'url'     => get_permalink(Products::instance()->get_preview_product()),
 			],
 			'cart'     => [
 				'title'   => esc_html__('Cart', 'shopengine'),

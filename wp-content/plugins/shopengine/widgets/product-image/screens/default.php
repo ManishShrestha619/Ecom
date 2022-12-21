@@ -21,7 +21,7 @@ if( $product->is_on_sale() && 'yes' === $settings['shopengine_sale_flash_status'
 		$s_p = ( $regular_price - $current_price ) / $regular_price * 100;
 		$sale_price = \Automattic\WooCommerce\Utilities\NumberUtil::round( $s_p );
 
-		echo '<span class="onsale ' . $flash_slae_position . '">' . esc_html($sale_price) . esc_html__( '% OFF', 'shopengine' ) . '</span>';
+		echo '<span class="onsale ' . esc_attr($flash_slae_position) . '">' . esc_html($sale_price) . esc_html__( '% OFF', 'shopengine' ) . '</span>';
 	}
 
 } // flash sale end

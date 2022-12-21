@@ -19,8 +19,6 @@ class Shopengine_Swatches
     {
         add_action('wp_enqueue_scripts', [$this, 'add_enqueue']);
         add_action('shopengine_swatches_anywhere', [$this, 'print_attributes'], 10, 2);
-
-        
     }
 
     public function add_enqueue()
@@ -86,7 +84,7 @@ class Shopengine_Swatches
                 }
             }
             if($swatches){
-            echo '<div class="shopengine_swatches shopengine_swatches_in_loop shopengine_'.$attribute_to_show.'" data-attribute=' . "'" . json_encode($attribute_data, true) . "'" . ' data-attribute_name="attribute_' . esc_attr($attribute_to_show) . '">' . $swatches . '</div>';
+                shopengine_content_render('<div class="shopengine_swatches shopengine_swatches_in_loop shopengine_'.$attribute_to_show.'" data-attribute=' . "'" . json_encode($attribute_data, true) . "'" . ' data-attribute_name="attribute_' . esc_attr($attribute_to_show) . '">' . $swatches . '</div>');
             }
         }
     }

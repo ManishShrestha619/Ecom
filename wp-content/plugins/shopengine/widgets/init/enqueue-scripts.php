@@ -32,7 +32,6 @@ class Enqueue_Scripts
 
 
 		wp_enqueue_script('shopengine-elementor-script', \ShopEngine::widget_url() . 'init/assets/js/widgets.js', ['jquery', 'elementor-frontend'], \ShopEngine::version(), true);
-
 	}
 
 	public function elementor_css() {

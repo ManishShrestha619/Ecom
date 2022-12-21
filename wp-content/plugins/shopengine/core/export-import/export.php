@@ -16,8 +16,16 @@ class Export {
         ?>
         <wp_options>
             <wp_option>
-                <name><?php echo Action::ACTIVATED_TEMPLATES ?></name>
-                <val><?php echo get_option(Action::ACTIVATED_TEMPLATES) ?></val>
+                <name>
+                    <?php
+                    echo esc_html(Action::ACTIVATED_TEMPLATES);
+                    ?>
+                </name>
+                <val>
+                    <?php
+                    echo esc_js(get_option(Action::ACTIVATED_TEMPLATES));
+                    ?>
+                </val>
             </wp_option>
         </wp_options>
         <?php

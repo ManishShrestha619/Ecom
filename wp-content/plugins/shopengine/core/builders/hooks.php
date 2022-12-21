@@ -42,28 +42,23 @@ class Hooks {
 	 *
 	 * @since 2.5.0
 	 */
-	public function elementor_editor_initialized(){
+	public function elementor_editor_initialized()
+	{
 		global $post;
-
-		$post_type             = get_post_type($post);
-		$template_type         = get_post_meta($post->ID, 'shopengine_template__post_meta__type', true);
-		$shopengine_product_id = (isset($_GET['shopengine_product_id'])) ? sanitize_text_field($_GET['shopengine_product_id']) : false;
-		$action                = (isset($_GET['action'])) ? sanitize_text_field($_GET['action']) : false;
-
-		// List of template type that will be needed to check
-		$checkable_template_type = ['single', 'quick_view'];
-
-		$shopengine_admin_template_url = Helper::get_admin_list_template_url();
-		$product = wc_get_product($shopengine_product_id);
-
-		// check if the post type is not shopengine-template, template type is not single, if action is not elementor and there is no product id
-		if ($post_type === 'shopengine-template' && in_array($template_type, $checkable_template_type) && $action === 'elementor' && (!$shopengine_product_id || !$product)) {
-			wp_safe_redirect($shopengine_admin_template_url);
-			exit();
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- This hook can access only admin and already verified from elementor
+		if ( !empty( $_GET['action'] ) && sanitize_text_field( wp_unslash( $_GET['action'] ) ) === 'elementor' && get_post_type( $post ) === 'shopengine-template' ) {
+			$template_type           = get_post_meta( $post->ID, 'shopengine_template__post_meta__type', true );
+			$checkable_template_type = ['single', 'quick_view'];
+			// Check if the template is single or quick view template
+			if ( in_array( $template_type, $checkable_template_type ) ) {
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				if ( empty( $_GET['shopengine_product_id'] ) || !wc_get_product( intval( $_GET['shopengine_product_id'] ) ) ) {
+					wp_safe_redirect( Helper::get_admin_list_template_url() );
+					exit();
+				}
+			}
 		}
-		return;
 	}
-
 
 	/**
 	 * Public function add_author_support.
@@ -107,7 +102,6 @@ class Hooks {
 		return $columns;
 	}
 
-
 	/**
 	 * Public function render_column.
 	 * Render column for custom post type
@@ -128,7 +122,7 @@ class Hooks {
 
 		switch($column) {
 			case 'type':
-				echo empty($template_config_data) ?  '' : $template_config_data['title'];
+				echo esc_html(empty($template_config_data['title']) ?  '' : $template_config_data['title']);
 				if(class_exists(\ShopEngine_Pro::class)) {
 					$cat_name = get_the_category_by_ID($category_id);
 					if(isset($cat_name) && !is_wp_error($cat_name)) {
@@ -147,7 +141,7 @@ class Hooks {
 
 			case 'builder':
 				$builder = Helper::get_template_builder_type($post_id);;
-				echo empty($builder) ? 'elementor' : $builder;
+				echo esc_html(empty($builder) ? 'elementor' : $builder);
 				break;
 
 			case 'status':
@@ -168,11 +162,10 @@ class Hooks {
 					}
 				}
 
-				echo '<span class="shopengine_default type-'.esc_attr($template_type . ' ' . $status_class).'"> ' . $status . ' </span>';
+				echo wp_kses('<span class="shopengine_default type-'.$template_type . ' ' . $status_class.'"> ' . $status . ' </span>', Helper::get_kses_array());
 				break;
 		}
 	}
-
 
 	/**
 	 * Public function add_filter.
@@ -186,6 +179,7 @@ class Hooks {
 
 		if($typenow == Template_Cpt::TYPE) {
 
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- This hook can access only admin And not possible to verify nonce here
 			$selected = isset($_GET['type']) ? sanitize_key($_GET['type']) : ''; ?>
 
             <select name="type" id="type">
@@ -201,7 +195,6 @@ class Hooks {
 		}
 	}
 
-
 	/**
 	 * Public function query_filter.
 	 * Search query filter added in search query
@@ -212,126 +205,21 @@ class Hooks {
 	public function query_filter($query) {
 
 		global $pagenow;
-
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- This hook can access only admin And not possible to verify nonce here
 		$current_page = isset($_GET['post_type']) ? sanitize_key($_GET['post_type']) : '';
 
 		if(
 			is_admin()
 			&& Template_Cpt::TYPE == $current_page
 			&& 'edit.php' == $pagenow
-			&& isset($_GET['type'])
-			&& $_GET['type'] != ''
-			&& $_GET['type'] != 'all'
+			&& !empty($_GET['type']) // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- This hook can access only admin And not possible to verify nonce here
+			&& $_GET['type'] != 'all' // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- This hook can access only admin And not possible to verify nonce here
 		) {
-			$type                              = isset($_GET['type']) ? sanitize_key($_GET['type']) : '';
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- This hook can access only admin And not possible to verify nonce here
+			$type                              = sanitize_key($_GET['type']); 
 			$query->query_vars['meta_key']     = Action::get_meta_key_for_type();
 			$query->query_vars['meta_value']   = $type;
 			$query->query_vars['meta_compare'] = '=';
 		}
-	}
-
-
-	/**
-	 * Public function template_selected.
-	 * add meta box for choose template ShopEngine
-	 *
-	 * @since 1.0.0
-	 */
-	public function template_selected() {
-		global $post;
-
-		if(in_array($post->post_type, $this->actionPost_type)):
-			foreach($this->actionPost_type as $k => $v):
-				add_meta_box(
-					'shopengine_template',
-					esc_html__('ShopEngine Template', 'shopengine'),
-					[$this, 'shopengine_template'],
-					$v,
-					'side',
-					'low'
-				);
-			endforeach;
-		endif;
-	}
-
-
-	/**
-	 * Public function template_save.
-	 * ShopEngine Template save for product
-	 *
-	 * @since 1.0.0
-	 */
-	public function template_save($post_id, $post) {
-		if(!current_user_can('edit_post', $post_id)) {
-			return $post_id;
-		}
-
-		if(in_array($post->post_type, $this->actionPost_type)):
-			if(isset($_POST['shopengine-template'])) {
-				update_post_meta($post_id, Action::PK__SHOPENGINE_TEMPLATE . '__template', sanitize_key($_POST['shopengine-template']));
-			}
-		endif;
-	}
-
-
-	/**
-	 * Public function shopengine_template.
-	 * ShopEngine Template Html
-	 *
-	 * @since 1.0.0
-	 */
-	public function shopengine_template() {
-		global $post;
-
-		if(!isset($post->ID)) {
-			return '';
-		}
-
-		$page_template = get_post_meta($post->ID, Action::PK__SHOPENGINE_TEMPLATE . '__template', true);
-
-		$template = $this->get_post_single();
-		echo '<select name="shopengine-template">';
-		echo '<option value="0"> ' . esc_html__('Default', 'shopengine') . ' </option>';
-		if(is_array($template) && sizeof($template) > 0) {
-			foreach($template as $k => $v) {
-				$select = '';
-				if($page_template == $k) {
-					$select = 'selected';
-				}
-				echo '<option value="' . $k . '" ' . $select . '> ' . esc_html($v, 'shopengine') . ' </option>';
-			}
-		}
-		echo '</select>';
-	}
-
-
-	/**
-	 * get query post query
-	 *
-	 * @return array
-	 */
-	public function get_post_single() {
-
-		$args['post_status'] = 'publish';
-		$args['post_type']   = Template_Cpt::TYPE;
-		$args['meta_query']  = [
-			'relation' => 'AND',
-			[
-				'key'     => Action::get_meta_key_for_type(),
-				'value'   => 'single',
-				'compare' => '=',
-			],
-		];
-
-		$posts   = get_posts($args);
-		$options = [];
-		$count   = count($posts);
-		if($count > 0):
-			foreach($posts as $post) {
-				$options[$post->ID] = $post->post_title;
-			}
-		endif;
-
-		return $options;
 	}
 }

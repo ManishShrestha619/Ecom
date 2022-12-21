@@ -2,6 +2,8 @@
 
 namespace ShopEngine\Libs\Updater;
 
+use ShopEngine\Utils\Helper;
+
 defined('ABSPATH') || exit;
 
 /**
@@ -58,7 +60,6 @@ class Plugin_Updater {
 
 		// Set up hooks.
 		$this->init();
-
 	}
 
 	/**
@@ -75,7 +76,6 @@ class Plugin_Updater {
 		remove_action('after_plugin_row_' . $this->name, 'wp_plugin_update_row', 10);
 		add_action('after_plugin_row_' . $this->name, [$this, 'show_update_notification'], 10, 2);
 		add_action('admin_init', [$this, 'show_changelog']);
-
 	}
 
 	/**
@@ -216,31 +216,31 @@ class Plugin_Updater {
 		if(!empty($update_cache->response[$this->name]) && version_compare($this->version, $version_info->new_version, '<')) {
 
 			// build a plugin list row, with update notification
-			$wp_list_table = _get_list_table('WP_Plugins_List_Table');
+			// $wp_list_table = _get_list_table('WP_Plugins_List_Table');
 			# <tr class="plugin-update-tr"><td colspan="' . $wp_list_table->get_column_count() . '" class="plugin-update colspanchange">
-			echo '<tr class="plugin-update-tr" id="' . $this->slug . '-update" data-slug="' . $this->slug . '" data-plugin="' . $this->slug . '/' . $file . '">';
+
+			echo '<tr class="plugin-update-tr" id="' . esc_attr($this->slug) . '-update" data-slug="' . esc_attr($this->slug) . '" data-plugin="' . esc_attr($this->slug) . '/' . esc_attr($file) . '">';
 			echo '<td colspan="3" class="plugin-update colspanchange">';
 			echo '<div class="update-message notice inline notice-warning notice-alt">';
 
 			$changelog_link = self_admin_url('index.php?edd_sl_action=view_plugin_changelog&plugin=' . $this->name . '&slug=' . $this->slug . '&TB_iframe=true&width=772&height=911');
-			$changelog = esc_html__("Latest Version Changelog","shopengine");
 
 			if(empty($version_info->download_link)) {
 				printf(
-					__('There is a new version of %1$s available. %2$sView version %3$s details%4$s.', 'shopengine'),
+					esc_html__('There is a new version of %1$s available. %2$sView version %3$s details%4$s.', 'shopengine'),
 					esc_html($version_info->name),
-					'<a title="' . $changelog . '" target="_blank" class="thickbox" rel="noopener" href="' . esc_url($changelog_link) . '">',
+					'<a title="' . esc_html__("Latest Version Changelog","shopengine") . '" target="_blank" class="thickbox" rel="noopener" href="' . esc_url($changelog_link) . '">',
 					esc_html($version_info->new_version),
 					'</a>'
 				);
 			} else {
 				printf(
-					__('There is a new version of %1$s available. %2$sView version %3$s details%4$s or %5$supdate now%6$s.', 'shopengine'),
+					esc_html__('There is a new version of %1$s available. %2$sView version %3$s details%4$s or %5$supdate now%6$s.', 'shopengine'),
 					esc_html($version_info->name),
-					'<a title="' . $changelog . '" target="_blank" rel="noopener" class="thickbox" href="' . esc_url($changelog_link) . '">',
+					'<a title="' . esc_html__("Latest Version Changelog","shopengine") . '" target="_blank" rel="noopener" class="thickbox" href="' . esc_url($changelog_link) . '">',
 					esc_html($version_info->new_version),
 					'</a>',
-					'<a title="' . $changelog . '" href="' . esc_url(wp_nonce_url(self_admin_url('update.php?action=upgrade-plugin&plugin=') . $this->name, 'upgrade-plugin_' . $this->name)) . '">',
+					'<a title="' . esc_html__("Latest Version Changelog","shopengine") . '" href="' . esc_url(wp_nonce_url(self_admin_url('update.php?action=upgrade-plugin&plugin=') . $this->name, 'upgrade-plugin_' . $this->name)) . '">',
 					'</a>'
 				);
 			}
@@ -365,7 +365,6 @@ class Plugin_Updater {
 		}
 
 		return $args;
-
 	}
 
 	/**
@@ -461,15 +460,15 @@ class Plugin_Updater {
 	public function show_changelog() {
 
 		global $edd_plugin_data;
-
+		//phpcs:ignore WordPress.Security.NonceVerification.Recommended -- This hook can access only admin and not possible verify nonce here
 		if(empty($_REQUEST['edd_sl_action']) || 'view_plugin_changelog' != $_REQUEST['edd_sl_action']) {
 			return;
 		}
-
+		//phpcs:ignore WordPress.Security.NonceVerification.Recommended -- This hook can access only admin and not possible verify nonce here
 		if(empty($_REQUEST['plugin'])) {
 			return;
 		}
-
+		//phpcs:ignore WordPress.Security.NonceVerification.Recommended -- This hook can access only admin and not possible verify nonce here
 		if(empty($_REQUEST['slug'])) {
 			return;
 		}
@@ -477,9 +476,10 @@ class Plugin_Updater {
 		if(!current_user_can('update_plugins')) {
 			wp_die(esc_html__('You do not have permission to install plugin updates', 'shopengine'), esc_html__('Error', 'shopengine'), ['response' => 403]);
 		}
-
-		$data         = $edd_plugin_data[$_REQUEST['slug']];
+		//phpcs:ignore WordPress.Security.NonceVerification.Recommended -- This hook can access only admin and not possible verify nonce here
+		$data         = $edd_plugin_data[sanitize_text_field(wp_unslash($_REQUEST['slug']))];
 		$beta         = !empty($data['beta']) ? true : false;
+		//phpcs:ignore WordPress.Security.NonceVerification.Recommended -- This hook can access only admin and not possible verify nonce here
 		$cache_key    = md5('edd_plugin_' . sanitize_key($_REQUEST['plugin']) . '_' . $beta . '_version_info');
 		$version_info = $this->get_cached_version_info($cache_key);
 
@@ -489,7 +489,8 @@ class Plugin_Updater {
 				'edd_action' => 'get_version',
 				'item_name'  => isset($data['item_name']) ? $data['item_name'] : false,
 				'item_id'    => isset($data['item_id']) ? $data['item_id'] : false,
-				'slug'       => $_REQUEST['slug'],
+				//phpcs:ignore WordPress.Security.NonceVerification.Recommended -- This hook can access only admin and not possible verify nonce here
+				'slug'       => sanitize_text_field(wp_unslash($_REQUEST['slug'])), 
 				'author'     => $data['author'],
 				'url'        => home_url(),
 				'beta'       => !empty($data['beta']),
@@ -520,7 +521,7 @@ class Plugin_Updater {
 		}
 
 		if(!empty($version_info) && isset($version_info->sections['changelog'])) {
-			echo '<div style="background:#fff;padding:10px;">' . $version_info->sections['changelog'] . '</div>';
+			echo '<div style="background:#fff;padding:10px;">' . wp_kses($version_info->sections['changelog'], Helper::get_kses_array()) . '</div>';
 		}
 
 		exit;
@@ -545,7 +546,6 @@ class Plugin_Updater {
 		}
 
 		return $cache['value'];
-
 	}
 
 	public function set_version_info_cache($value = '', $cache_key = '') {

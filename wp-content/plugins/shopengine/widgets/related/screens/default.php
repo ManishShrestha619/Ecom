@@ -27,10 +27,12 @@ if($editor_mode) {
 	}
 
 	if($is_slider_enable && $shopengine_related_product_slider_show_arrows) {
-		echo sprintf(
-			'<div class="swiper-button-prev">%1$s</div><div class="swiper-button-next">%2$s</div>',
-			$this->get_icon_html($shopengine_related_product_slider_left_arrow_icon),
-			$this->get_icon_html($shopengine_related_product_slider_right_arrow_icon)
+		shopengine_content_render(
+			sprintf(
+				'<div class="swiper-button-prev">%1$s</div><div class="swiper-button-next">%2$s</div>',
+				$this->get_icon_html($shopengine_related_product_slider_left_arrow_icon),
+				$this->get_icon_html($shopengine_related_product_slider_right_arrow_icon)
+			)
 		);
 	}
 	?>

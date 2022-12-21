@@ -101,11 +101,12 @@ class Attribute_Hooks {
 
 	public function add_attr_column_content($columns, $column, $term_id) {
 
-		if('pa_preview' !== $column) {
+		//phpcs:ignore WordPress.Security.NonceVerification.Recommended -- This hook can access only admin and not possible nonce here
+		if('pa_preview' !== $column && empty($_REQUEST['taxonomy'])) {
 			return $columns;
 		}
 
-
+		//phpcs:ignore WordPress.Security.NonceVerification.Recommended -- This hook can access only admin and not possible nonce here
 		$attr = Helper::get_tax_attribute(sanitize_key($_REQUEST['taxonomy']));
 
 		$value = get_term_meta($term_id, $attr->attribute_type, true);
@@ -133,23 +134,23 @@ class Attribute_Hooks {
 
 	public function persist_term_meta($term_id, $tt_id) {
 
-		$types = Swatches::instance()->get_available_types();
+		if(
+			(!empty($_POST['_wpnonce_add-tag']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['_wpnonce_add-tag'])) ,'add-tag')) ||
+			(!empty($_POST['tag_ID']) && !empty($_POST['_wpnonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['_wpnonce'])) ,'update-tag_' . sanitize_text_field(wp_unslash($_POST['tag_ID']))))
+		) {
+			$types = Swatches::instance()->get_available_types();
 
-		foreach($types as $type => $label) {
-			if(isset($_POST[$type])) {
-
-				if($type == Swatches::PA_COLOR) {
-
-					update_term_meta($term_id, $type, sanitize_hex_color($_POST[$type]));
-
-				} else {
-
-					update_term_meta($term_id, $type, sanitize_text_field($_POST[$type]));
+			foreach($types as $type => $label) {
+				if(isset($_POST[$type])) {
+					if($type == Swatches::PA_COLOR) {
+						update_term_meta($term_id, $type, sanitize_hex_color(wp_unslash($_POST[$type])));
+					} else {
+						update_term_meta($term_id, $type, sanitize_text_field(wp_unslash($_POST[$type])));
+					}
 				}
 			}
 		}
 	}
-
 
 	public function attribute_fields($type, $value, $form) {
 
@@ -164,14 +165,7 @@ class Attribute_Hooks {
 			return;
 		}
 
-		printf(
-			'<%s class="form-field">%s<label for="term-%s">%s</label>%s',
-			'edit' == $form ? 'tr' : 'div',
-			'edit' == $form ? '<th>' : '',
-			esc_attr($type),
-			$types[$type],
-			'edit' == $form ? '</th><td>' : ''
-		);
+		shopengine_content_render(sprintf('<%s class="form-field">%s<label for="term-%s">%s</label>%s', 'edit' == $form ? 'tr' : 'div', 'edit' == $form ? '<th>' : '', esc_attr($type), $types[$type], 'edit' == $form ? '</th><td>' : ''));
 
 		switch($type) {
 			case Swatches::PA_IMAGE:

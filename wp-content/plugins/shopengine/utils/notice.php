@@ -30,8 +30,12 @@ class Notice {
 	 */
 	public function dismiss() {
 
+		if(empty($_POST['shopengine_nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['shopengine_nonce'])), 'shopengine_nonce')) {
+			wp_send_json_error();
+		}
+
 		$id   = ( isset( $_POST['id'] ) ) ? sanitize_key($_POST['id']) : '';
-		$time = ( isset( $_POST['time'] ) ) ? sanitize_text_field($_POST['time']) : '';
+		$time = ( isset( $_POST['time'] ) ) ? sanitize_text_field(wp_unslash($_POST['time'])) : '';
 		$meta = ( isset( $_POST['meta'] ) ) ? sanitize_key($_POST['meta']) : '';
 
 		// Valid inputs?
@@ -73,6 +77,7 @@ class Notice {
 							id 		: id,
 							meta 	: meta,
 							time 	: time,
+							shopengine_nonce: ".esc_html(wp_create_nonce( 'shopengine_nonce' ))."
 						},
 					});
 			
@@ -164,9 +169,9 @@ class Notice {
 	 */
 	public static function markup( $notice = [] ) {
 		?>
-		<div id="<?php echo esc_attr( $notice['id'] ); ?>" class="<?php echo esc_attr( $notice['classes'] ); ?>" <?php echo Helper::render($notice['data']); ?>>
+		<div id="<?php echo esc_attr( $notice['id'] ); ?>" class="<?php echo esc_attr( $notice['classes'] ); ?>" <?php shopengine_content_render(Helper::render($notice['data'])); ?>>
 			<p>
-				<?php echo Helper::kses($notice['message']); ?>
+				<?php echo wp_kses($notice['message'], Helper::get_kses_array()); ?>
 			</p>
 
 			<?php if(!empty($notice['btn'])):?>

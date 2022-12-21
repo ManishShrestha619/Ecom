@@ -65,7 +65,6 @@ trait Lazy_Cache {
 		$this->cache_objects[$cache_key] = $query_object;
 
 		return $query_object;
-
 	}
 
 	public function get_custom_terms($option_key, $key) {

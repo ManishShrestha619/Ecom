@@ -2,7 +2,7 @@
 Contributors: Ataurr, wpmet, emranio, aion11
 Tags: Woo builder, Elementor, WooCommerce, WooCommerce Elementor, WooCommerce Builder, WooCommerce Product,
 Tested up to: 6.0
-Stable tag: 3.0.0
+Stable tag: 3.1.0
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -432,6 +432,24 @@ If you like using ShopEngine WooCommerce Builder, then consider checking out our
 Visit  [wpmet](https://wpmet.com/)  to learn more about how to get the best of WordPress with  [Tutorial, Tips & Tricks](https://wpmet.com/blog)!
 
 == Changelog ==
+
+v3.1.0 // 29-11-2022
+Added: Variable product support on the Deal Products widget.
+Added: Checkout billing and shipping widget input field sorting.
+Added: Archive product rating in Elementor editor mode.
+Added: New demo template for Checkout.
+Fixed: Woocommerce notice not showing issue Fixed.
+Fixed: Add to cart button Wrong tooltip text on Archive Products.
+Fixed: Broken Style with variable product in Cart table. 
+Fixed: Broken Style with variable product in Checkout order review.
+Fixed: Checkout Coupon background Issue.
+Fixed: Demo template preview link and thumbnail missing issue.
+Fixed: GDPR complained issue with google font.
+Fixed: Direct checkout ordering in archive products.
+Fixed: Template editor preview link.
+Fixed: Template search product issue when permalink set as plain.
+Improved: Security Improvement.
+Improved: Demo template design.
 
 v3.0.0 // 01-11-2022
 Added: All types of product support at single product details page.

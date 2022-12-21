@@ -26,7 +26,7 @@ class Theme_Support {
             return false;
         }
 
-        return explode(',', $_COOKIE[Wishlist::COOKIE_KEY]);
+        return explode(',', sanitize_text_field(wp_unslash($_COOKIE[Wishlist::COOKIE_KEY])));
     }
 
     public static function get_comparison_product_ids() {

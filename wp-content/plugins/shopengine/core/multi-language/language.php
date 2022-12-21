@@ -34,6 +34,7 @@ class Language
         add_action( 'shopengine/core/settings/on_save', [$this, 'create_language_strings'] );
 
         // Register Module Strings in Polylang
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Just checking current page
         if ( is_admin() && isset( $_REQUEST['page'] ) && $_REQUEST['page'] === 'mlang_strings' ) {
             $strings = get_option( 'shopengine_module_strings' );
             if ( $strings ) {

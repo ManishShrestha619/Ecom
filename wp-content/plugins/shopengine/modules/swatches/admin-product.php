@@ -31,7 +31,7 @@ class Admin_Product {
 		$taxonomy_name = wc_attribute_taxonomy_name($taxonomy->attribute_name);
 
 		global $thepostid;
-
+		//phpcs:ignore WordPress.Security.NonceVerification.Missing  -- This hook can access only admin and not possible nonce here
 		$product_id = isset($_POST['post_id']) ? absint($_POST['post_id']) : $thepostid; ?>
 
         <select multiple="multiple" data-placeholder="<?php esc_attr_e('Select terms', 'shopengine'); ?>"
@@ -57,15 +57,14 @@ class Admin_Product {
 		<?php
 	}
 
-
 	public function add_attribute_by_ajax() {
 
 		$nonce  = isset($_POST['nonce']) ? sanitize_key($_POST['nonce']) : '';
 		$tax    = isset($_POST['taxonomy']) ? sanitize_key($_POST['taxonomy']) : '';
 		$type   = isset($_POST['type']) ? sanitize_key($_POST['type']) : '';
-		$name   = isset($_POST['name']) ? sanitize_text_field($_POST['name']) : '';
+		$name   = isset($_POST['name']) ? sanitize_text_field(wp_unslash($_POST['name'])) : '';
 		$slug   = isset($_POST['slug']) ? sanitize_key($_POST['slug']) : '';
-		$swatch = isset($_POST['swatch']) ? sanitize_text_field($_POST['swatch']) : '';
+		$swatch = isset($_POST['swatch']) ? sanitize_text_field(wp_unslash($_POST['swatch'])) : '';
 
 		if(!wp_verify_nonce($nonce, 'shopengine_nonce_add_attribute')) {
 			wp_send_json_error(esc_html__('Request denied', 'shopengine'));
@@ -138,7 +137,7 @@ class Admin_Product {
                     <div class="hidden shopengine_term__tax"></div>
 
                     <input type="hidden" class="shopengine__input" name="nonce"
-                           value="<?php echo wp_create_nonce('shopengine_nonce_add_attribute') ?>">
+                           value="<?php echo esc_attr(wp_create_nonce('shopengine_nonce_add_attribute')) ?>">
                 </div>
                 <div class="shopengine_modal__footer">
                     <button class="button button-secondary shopengine_modal__close"><?php esc_html_e('Cancel', 'shopengine') ?></button>

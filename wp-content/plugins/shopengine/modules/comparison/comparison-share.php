@@ -7,10 +7,12 @@ namespace ShopEngine\Modules\Comparison;
 class Comparison_Share {
 
 	public static function init() {
-		$product_ids = isset( $_GET['product_ids'] ) &&  $_GET['product_ids'] ? explode( ',', $_GET['product_ids'] ?? '' ) : [];
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- It's a fronted user part, not possible to verify nonce here
+		$product_ids = !empty( $_GET['product_ids'] ) ? explode( ',', sanitize_text_field( wp_unslash( $_GET['product_ids'] ) ) ?? '' ) : [];
 
 		if ( empty( $product_ids ) ) {
-			$existing_comparison_products = empty( $_COOKIE[ Comparison::COOKIE_KEY ] ) ? '' : $_COOKIE[ Comparison::COOKIE_KEY ];
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- It's a fronted user part, not possible to verify nonce here
+			$existing_comparison_products = empty( $_COOKIE[ Comparison::COOKIE_KEY ] ) ? '' : sanitize_text_field( wp_unslash( $_COOKIE[ Comparison::COOKIE_KEY ] ) );
 			$product_ids                  = $existing_comparison_products? explode( ',', $existing_comparison_products ) : [];
 
 		} else {

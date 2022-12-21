@@ -2,6 +2,8 @@
 
 namespace ShopEngine\Core\Builders;
 
+use Elementor\Core\Files\Uploads_Manager;
+use ShopEngine\Core\Sample_Designs\Base;
 use ShopEngine\Core\Template_Cpt;
 use ShopEngine\Traits\Singleton;
 
@@ -125,15 +127,26 @@ class Action
             /**
              *  Get ready made template data
              */
-            $design_data = \ShopEngine\Core\Sample_Designs\Base::instance()->get_design_data( $form_settings['sample_design'] );
+            $template_path = Base::instance()->get_content_path( $form_settings['sample_design'] );
 
-            if ( !is_null( $design_data ) ) {
-                /**
-                 *  for unicode character support
-                 */
-                $design_data = wp_slash( wp_json_encode( $design_data ) );
+            if ( is_file( $template_path ) ) {
 
-                update_post_meta( $template_id, '_elementor_data', $design_data );
+                $fileContent = file_get_contents( $template_path );
+
+                if ( !is_null( $fileContent ) ) {
+
+                    add_filter('elementor/files/allow_unfiltered_upload', '__return_true');
+
+                    $result = \Elementor\Plugin::$instance->templates_manager->import_template( [
+                        'fileData' => base64_encode( $fileContent ),
+                        'fileName' => 'shopengine-content.json'
+                    ] );
+
+                    $imported_template_id = $result[0]['template_id'];
+                    $template_data        = get_post_meta( $imported_template_id, '_elementor_data', true );
+                    update_post_meta( $template_id, '_elementor_data', $template_data );
+                    wp_delete_post( $imported_template_id );
+                }
             }
         }
 
@@ -173,13 +186,13 @@ class Action
                 'id'                  => $this->template_id,
                 'title'               => $title,
                 'type'                => Template_Cpt::TYPE,
-                'activated_templates' => $activated_templates,
+                'activated_templates' => $activated_templates
             ],
             'status' => esc_html__( 'Template settings updated', 'shopengine' )
         ];
 
-        if(isset($form_settings['category_id'])) {
-            $response['data']['category_title'] = get_the_category_by_ID($form_settings['category_id']);
+        if ( isset( $form_settings['category_id'] ) ) {
+            $response['data']['category_title'] = get_the_category_by_ID( $form_settings['category_id'] );
         }
 
         return $response;

@@ -1,6 +1,6 @@
 <?php
    $args = array(
-         'post_type' => 'product',
+         'post_type' => ['product', 'product_variation'],
          'status'    => 'publish',
          'meta_query' => array(
              array(
@@ -136,12 +136,12 @@
          
          <!-- product description -->
          <div class="deal-products__prices">
-               <ins><span class="woocommerce-Price-amount amount"><?php echo \Shopengine\Utils\Helper::kses( $price ) ?> </span></ins>
+               <ins><span class="woocommerce-Price-amount amount"><?php echo wp_kses($price, \Shopengine\Utils\Helper::get_kses_array()) ?> </span></ins>
                
                <?php if( !empty( $price )  ) : ?>
                   <del>
                      <span class="woocommerce-Price-amount amount">
-                        <?php echo \Shopengine\Utils\Helper::kses( $reg_price ) ?>
+                        <?php echo wp_kses($reg_price, \Shopengine\Utils\Helper::get_kses_array()) ?>
                      </span>
                   </del>
                <?php endif; ?>

@@ -642,7 +642,6 @@ class Theme_Hooks {
 		/**
 		 * End of Astra theme hook reverting
 		 ******************************************************/
-
 	}
 
 	public function theme_conflicts_in_editor__product_tabs_widget() {
@@ -735,9 +734,7 @@ class Theme_Hooks {
 		/**
 		 * End of Flatsome theme hook reverting
 		 ******************************************************/
-
 	}
-
 
 	public function theme_conflicts_empty_cart_page() {
 
@@ -876,7 +873,6 @@ class Theme_Hooks {
 		/**
 		* Electro of Neve theme hook reverting
 		******************************************************/
-
 	}
 
 	public function theme_conflicts_in_elementor_editor_up_sells() {
@@ -1116,7 +1112,6 @@ class Theme_Hooks {
 			/**
 			 * Electro of Neve theme hook reverting
 			 ******************************************************/
-
 	}
 
 

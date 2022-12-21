@@ -4,7 +4,7 @@ namespace ShopEngine\Modules\Quick_View;
 
 use ShopEngine\Traits\Singleton;
 use ShopEngine\Utils\Helper;
-
+use ShopEngine\Widgets\Products;
 /**
  * Class Wish_List
  *
@@ -27,8 +27,8 @@ class Quick_View
 
 		add_filter('shopengine/page_templates', [$this, 'add_quick_view'], 1);
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Just checking current page
 		if(!empty($_REQUEST['shopengine_quickview'])) {
-
 			// In quickview modal we will not show anything
 			return;
 		}
@@ -47,6 +47,9 @@ class Quick_View
 				['jquery', 'shopengine-modal-script']
 			);
 
+			wp_localize_script('shopengine-quickview', 'shopEngineQuickView', [
+				'rest_nonce' => wp_create_nonce('wp_rest')
+			]);
 		});
 
 		add_filter('woocommerce_loop_add_to_cart_link', [$this, 'print_button'], 10, 3);
@@ -60,9 +63,11 @@ class Quick_View
 		return array_merge($list, [
 			'quick_view'           => [
 				'title'   => esc_html__('Quick View', 'shopengine'),
+				'package' => 'free',
 				'class'   => '\ShopEngine\Modules\Quick_View\Quick_View',
 				'opt_key' => 'quick_view',
 				'css'     => 'quick-view',
+				'url'     => get_permalink(Products::instance()->get_preview_product()),
 			],
 		]);
     }

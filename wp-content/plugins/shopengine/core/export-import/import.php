@@ -11,11 +11,12 @@ class Import {
 
 	public function rum_importer() {
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing  -- This hook can access only admin and not possible nonce here
 		if(empty($_POST['import_id'])) {
 			return;
 		}
-
-		$im_id = (int)$_POST['import_id'];
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing  -- This hook can access only admin and not possible nonce here
+		$im_id = intval($_POST['import_id']);
 		$file  = get_attached_file($im_id);
 
 		$dom     = new \DOMDocument;

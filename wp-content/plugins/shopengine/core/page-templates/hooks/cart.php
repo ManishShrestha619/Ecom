@@ -41,7 +41,6 @@ class Cart extends Base {
 			add_action( 'woocommerce_cart_collaterals', 'woocommerce_cross_sell_display' );
 			remove_action( 'woocommerce_after_cart', 'woocommerce_cross_sell_display' );
 		}
-
 	}
 
 	protected function template_include_pre_condition(): bool {

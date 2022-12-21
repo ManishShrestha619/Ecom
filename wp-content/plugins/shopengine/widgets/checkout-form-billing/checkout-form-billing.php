@@ -2,7 +2,7 @@
 
 namespace Elementor;
 
-
+use ShopEngine\Utils\Helper;
 use ShopEngine\Widgets\Products;
 
 defined('ABSPATH') || exit;
@@ -17,6 +17,34 @@ class ShopEngine_Checkout_Form_Billing extends \ShopEngine\Base\Widget
 
 
 	protected function register_controls() {
+
+		$this->start_controls_section(
+			'shopengine_section_layout',
+			[
+				'label' => esc_html__('Layout', 'shopengine'),
+				'tab'   => Controls_Manager::TAB_CONTENT,
+			]
+		);
+
+		$repeater = new Repeater();
+		$this->add_control(
+			'shopengine_billing_inputs',
+			[
+				'label' => esc_html__('Input List', 'shopengine'),
+				'type' => Controls_Manager::REPEATER,
+				'fields' => $repeater->get_controls(),
+				'default' => Helper::get_checkout_input_fields(),
+				'title_field' => '{{{ list_title }}}',
+				'item_actions' => [
+					'add'       => false,
+					'duplicate' => false,
+					'remove'    => false,
+					'sort'      => true,
+				]
+			]
+		);
+
+		$this->end_controls_section();
 
 		/**
 		 * Billing form title content
@@ -823,6 +851,8 @@ class ShopEngine_Checkout_Form_Billing extends \ShopEngine\Base\Widget
 	protected function screen() {
 
 		$settings = $this->get_settings_for_display();
+
+		Helper::order_checkout_fields( $settings['shopengine_billing_inputs'] );
 
 		$tpl = Products::instance()->get_widget_template($this->get_name());
 

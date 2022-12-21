@@ -1,4 +1,8 @@
-<?php defined('ABSPATH') || exit;
+<?php
+
+use ShopEngine\Utils\Helper;
+
+ defined('ABSPATH') || exit;
 
 $post_type = get_post_type();
 
@@ -23,6 +27,6 @@ if(!has_term('', 'product_cat', $product->get_id())) {
 
 	<?php endif;
 
-	echo wc_get_product_category_list($product->get_id(), ', ', '<span class="product-cats-links">', '</span>'); ?>
+	echo wp_kses(wc_get_product_category_list($product->get_id(), ', ', '<span class="product-cats-links">', '</span>'), Helper::get_kses_array()); ?>
 
 </div>

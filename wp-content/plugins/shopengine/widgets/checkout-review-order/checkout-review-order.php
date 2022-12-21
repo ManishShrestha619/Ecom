@@ -511,8 +511,6 @@ class ShopEngine_Checkout_Review_Order extends \ShopEngine\Base\Widget
 		);
 
 		$this->end_controls_section();
-
-
 	}
 
 	public function inline_css_generate($settings)

@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitf676bd039dad612e29dd6f01ddd88385
+class ComposerStaticInitc1696f593d701da554f0e3388bd56ab2
 {
     public static $files = array (
         '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
@@ -713,6 +713,8 @@ class ComposerStaticInitf676bd039dad612e29dd6f01ddd88385
         'Automattic\\WooCommerce\\GoogleListingsAndAds\\Utility\\ISOUtility' => __DIR__ . '/../..' . '/src/Utility/ISOUtility.php',
         'Automattic\\WooCommerce\\GoogleListingsAndAds\\Validator\\GooglePriceConstraint' => __DIR__ . '/../..' . '/src/Validator/GooglePriceConstraint.php',
         'Automattic\\WooCommerce\\GoogleListingsAndAds\\Validator\\GooglePriceConstraintValidator' => __DIR__ . '/../..' . '/src/Validator/GooglePriceConstraintValidator.php',
+        'Automattic\\WooCommerce\\GoogleListingsAndAds\\Validator\\ImageUrlConstraint' => __DIR__ . '/../..' . '/src/Validator/ImageUrlConstraint.php',
+        'Automattic\\WooCommerce\\GoogleListingsAndAds\\Validator\\ImageUrlConstraintValidator' => __DIR__ . '/../..' . '/src/Validator/ImageUrlConstraintValidator.php',
         'Automattic\\WooCommerce\\GoogleListingsAndAds\\Validator\\Validatable' => __DIR__ . '/../..' . '/src/Validator/Validatable.php',
         'Automattic\\WooCommerce\\GoogleListingsAndAds\\Value\\ArrayWithRequiredKeys' => __DIR__ . '/../..' . '/src/Value/ArrayWithRequiredKeys.php',
         'Automattic\\WooCommerce\\GoogleListingsAndAds\\Value\\BuiltScriptDependencyArray' => __DIR__ . '/../..' . '/src/Value/BuiltScriptDependencyArray.php',
@@ -4216,9 +4218,9 @@ class ComposerStaticInitf676bd039dad612e29dd6f01ddd88385
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitf676bd039dad612e29dd6f01ddd88385::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitf676bd039dad612e29dd6f01ddd88385::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitf676bd039dad612e29dd6f01ddd88385::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitc1696f593d701da554f0e3388bd56ab2::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitc1696f593d701da554f0e3388bd56ab2::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInitc1696f593d701da554f0e3388bd56ab2::$classMap;
 
         }, null, ClassLoader::class);
     }

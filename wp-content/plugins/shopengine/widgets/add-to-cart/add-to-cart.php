@@ -2745,7 +2745,9 @@ class ShopEngine_Add_To_Cart extends \ShopEngine\Base\Widget
 			}
 		}
 
-		echo '<style>'.$styles.'</style>';
+		echo '<style>';
+		shopengine_content_render($styles);
+		echo '</style>';
 	}
 
 

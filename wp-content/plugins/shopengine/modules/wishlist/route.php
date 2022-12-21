@@ -54,7 +54,7 @@ class Route extends Api {
 			];
 		}
 
-		$cck = empty($_COOKIE[Wishlist::COOKIE_KEY]) ? '' : $_COOKIE[Wishlist::COOKIE_KEY];
+		$cck = empty($_COOKIE[Wishlist::COOKIE_KEY]) ? '' : sanitize_text_field(wp_unslash($_COOKIE[Wishlist::COOKIE_KEY]));
 		$cck = explode(',', $cck);
 		$content = array_combine($cck, $cck);
 

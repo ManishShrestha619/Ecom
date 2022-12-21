@@ -71,12 +71,12 @@ $columns	= $is_slider_enable ? $shopengine_cross_sells_product_slider_perview : 
 	if($init_slider && $is_slider_enable && $shopengine_cross_sells_product_slider_show_dots) {
 		echo '<div class="swiper-pagination" style="width: 100%;"></div>';
 	}
-
+	
 	if($init_slider && $is_slider_enable && $shopengine_cross_sells_product_slider_show_arrows) {
 		echo sprintf(
 			'<div class="swiper-button-prev">%1$s</div><div class="swiper-button-next">%2$s</div>',
-			$this->get_icon_html($shopengine_cross_sells_product_slider_left_arrow_icon),
-			$this->get_icon_html($shopengine_cross_sells_product_slider_right_arrow_icon)
+			wp_kses( $this->get_icon_html($shopengine_cross_sells_product_slider_left_arrow_icon), \ShopEngine\Utils\Helper::get_kses_array() ),
+			wp_kses( $this->get_icon_html($shopengine_cross_sells_product_slider_right_arrow_icon), \ShopEngine\Utils\Helper::get_kses_array() )
 		);
 	}
 	?>

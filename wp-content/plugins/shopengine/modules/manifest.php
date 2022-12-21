@@ -6,12 +6,8 @@ defined('ABSPATH') || exit;
 
 use ShopEngine\Core\Register\Module_List;
 
-
 class Manifest
 {
-
-	private $module_list;
-
 	public function init() {
 
 		add_action('init', [$this, 'manifest_modules'], 0);
@@ -42,10 +38,8 @@ class Manifest
 
 		}
 
- 		if ( !wp_doing_ajax() && strpos($_SERVER['REQUEST_URI'], 'wp-json/') === false ) {
+ 		if ( !wp_doing_ajax() && !empty($_SERVER['REQUEST_URI']) && strpos(sanitize_text_field(wp_unslash($_SERVER['REQUEST_URI'])), 'wp-json/') === false ) {
 		    do_action('shopengine/module/comparison-module-pro-support');
  		}
-
-
 	}
 }

@@ -107,7 +107,6 @@ class ShopEngine_Archive_Title extends \ShopEngine\Base\Widget
 		);
 
 		$this->end_controls_section();
-
 	}
 
 	protected function screen() {
@@ -127,12 +126,10 @@ class ShopEngine_Archive_Title extends \ShopEngine\Base\Widget
 			]
 		);
 		$title_tag = \ShopEngine\Utils\Helper::esc_options($settings['shopengine_archive_title_header_size'], $options_heading_title_tag, 'h2');
-
 		echo sprintf(
 			'<div class="shopengine-archive-title"><%1$s class="archive-title">%2$s</%1$s></div>',
-			$title_tag,
+			esc_html( $title_tag ),
 			esc_html(woocommerce_page_title(false))
 		);
-
 	}
 }

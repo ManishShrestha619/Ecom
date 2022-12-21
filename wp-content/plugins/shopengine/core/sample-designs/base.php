@@ -38,6 +38,10 @@ class Base {
 		return $this->designs;
 	}
 
+	public function get_content_path(string $path = '') {
+		return $this->content_path . $path;
+	}
+
 	public function get_design_data($content_file_path) {
 
 		$content_file = $this->content_path . $content_file_path;

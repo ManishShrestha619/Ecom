@@ -34,4 +34,18 @@ class ShopEngine_Checkout_Review_Order_Config extends \ShopEngine\Base\Widget_Co
 	public function get_template_territory() {
 		return ['checkout', 'quick_checkout'];
 	}
+
+	public static function add_product_thumbnail( $cart_item ) {
+
+		if(!empty($cart_item['product_id'])) {
+			$product    = wc_get_product( intval($cart_item['product_id']) );
+			$product_id = !empty( $cart_item['variation_id'] ) ? intval($cart_item['variation_id']) : $product->get_id();
+			$attachment = wp_get_attachment_image( get_post_thumbnail_id( $product_id ), 'single-post-thumbnail' );
+
+			if(empty($attachment)) {
+				$attachment = wp_get_attachment_image( $product->get_image_id(), 'full' );
+			} 
+			shopengine_content_render($attachment);
+		}
+	}
 }

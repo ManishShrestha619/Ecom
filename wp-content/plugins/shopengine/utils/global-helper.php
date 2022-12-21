@@ -17,3 +17,10 @@ if ( !function_exists( 'shopengine_translate' ) ) {
         return $value;
     }
 }
+
+if ( !function_exists( 'shopengine_content_render' ) ) {
+    function shopengine_content_render($content) {
+        //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+        echo $content;
+    }
+}

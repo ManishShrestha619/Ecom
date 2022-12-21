@@ -76,6 +76,7 @@ class ContainerConfigurator implements IContainerConfigurator {
     $container->autowire(\MailPoet\API\JSON\v1\Forms::class)->setPublic(true);
     $container->autowire(\MailPoet\API\JSON\v1\ImportExport::class)->setPublic(true);
     $container->autowire(\MailPoet\API\JSON\v1\Mailer::class)->setPublic(true);
+    $container->autowire(\MailPoet\API\JSON\v1\Tags::class)->setPublic(true);
     $container->autowire(\MailPoet\API\JSON\v1\Newsletters::class)->setPublic(true);
     $container->autowire(\MailPoet\API\JSON\v1\NewsletterLinks::class)->setPublic(true);
     $container->autowire(\MailPoet\API\JSON\v1\NewsletterTemplates::class)->setPublic(true);
@@ -368,6 +369,7 @@ class ContainerConfigurator implements IContainerConfigurator {
     $container->autowire(\MailPoet\Subscribers\ImportExport\PersonalDataExporters\NewsletterClicksExporter::class)->setPublic(true);
     $container->autowire(\MailPoet\Subscribers\Statistics\SubscriberStatisticsRepository::class);
     $container->autowire(\MailPoet\Subscribers\SubscribersCountsController::class)->setPublic(true);
+    $container->autowire(\MailPoet\Subscribers\ConfirmationEmailCustomizer::class)->setPublic(true);
     // Segments
     $container->autowire(\MailPoet\Segments\WooCommerce::class)->setPublic(true);
     $container->autowire(\MailPoet\Segments\WP::class)->setPublic(true);

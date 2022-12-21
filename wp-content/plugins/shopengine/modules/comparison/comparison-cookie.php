@@ -21,8 +21,8 @@ class Comparison_Cookie {
 	 * @return array
 	 */
 	public static function get_product_ids($id = null) {
-		if( isset($_COOKIE[ Comparison::COOKIE_KEY ] ) && $_COOKIE[ Comparison::COOKIE_KEY ] ){
-			$product_id_from_cookie = $_COOKIE[ Comparison::COOKIE_KEY ] .','.$id;
+		if( !empty($_COOKIE[ Comparison::COOKIE_KEY ] ) ){
+			$product_id_from_cookie = sanitize_text_field( wp_unslash( $_COOKIE[ Comparison::COOKIE_KEY ] ) ) .','.$id;
 		}else{
 			$product_id_from_cookie =  $id;
 		}

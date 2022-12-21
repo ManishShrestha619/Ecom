@@ -82,7 +82,6 @@ class ShopEngine_Archive_Result_Count extends \ShopEngine\Base\Widget {
 			]
 		);
 		$this->end_controls_section();
-
 	}
 
 	protected function screen() {

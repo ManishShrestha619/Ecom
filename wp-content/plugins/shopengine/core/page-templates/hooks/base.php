@@ -45,6 +45,7 @@ abstract class Base {
 
 		$this->prod_tpl_id   = $this->get_registered_template_id($this->get_page_type_option_slug());
 
+		//phpcs:ignore WordPress.Security.NonceVerification.Recommended -- It's a fronted user part, not possible to verify nonce here
         if(isset($_GET['elementor-preview'])) {
 			/**
 			 * Remove checkout template extra markup;
@@ -77,9 +78,13 @@ abstract class Base {
 	 	add_action('shopengine/builder/gutenberg/before-content', [$this, 'theme_conflicts_in_widget']);
 
 		$this->init();
+
+		/**
+		 * This variable is used inside compatibility\conflicts\manifest.php file
+		 */
+		global $is_used_shopengine_template;
+		$is_used_shopengine_template = true;
 	}
-
-
 
 	public function theme_conflicts_in_widget($template_type = null) {
 		if(!$template_type) $template_type = $this->page_type ;
@@ -112,8 +117,8 @@ abstract class Base {
 
 			add_action('wp_head', function () {
 				$css = \Wpmet\Gutenova\BlockManager::instance()->render_css($this->prod_tpl_id);
-				echo $css;
-			},         999);
+				shopengine_content_render($css);
+			}, 999);
 
 		} else {
 

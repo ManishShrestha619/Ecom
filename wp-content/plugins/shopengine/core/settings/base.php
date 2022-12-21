@@ -33,15 +33,14 @@ class Base {
 		}
 
 		add_action('admin_enqueue_scripts', function () {
-
-			if(isset($_REQUEST['post_type']) && $_REQUEST['post_type'] === \ShopEngine\Core\Template_Cpt::TYPE) {
+			//phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Just checking post type shopengine template or not
+			if(isset($_REQUEST['post_type']) && sanitize_text_field(wp_unslash($_REQUEST['post_type'])) === \ShopEngine\Core\Template_Cpt::TYPE) {
 
 				if(function_exists('wc_get_products') && !\ShopEngine\Core\Builders\Templates::has_simple_product()) {
 
 					\ShopEngine\Core\Builders\Templates::create_wc_simple_product();
 				}
 			}
-
 		}, 0);
 
 		add_action('before_delete_post', function($post_id, $post) {
@@ -183,7 +182,8 @@ class Base {
 	}
 
 	function redirect_to_content() {
-		wp_redirect($this->menu_link_part . '#getting-started');
+		wp_safe_redirect($this->menu_link_part . '#getting-started');
+		exit;
 	}
 
 	function content() {

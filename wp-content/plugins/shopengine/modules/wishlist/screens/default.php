@@ -1,5 +1,3 @@
-
-
 <table class="table table-bordered shopengine-wishlist">
     <thead>
     <tr>
@@ -25,14 +23,16 @@
                     <?php echo wp_get_attachment_image( $product->get_image_id(), ['100','100'], false, ["width" => "100"] ); ?>
                 </span>
                 <p class="wishlist-product-name">
-                    <a title="<?php esc_html_e('View Product Full Details','shopengine')?>" target="_blank" href="<?php echo $product->get_permalink() ?>">
+                    <a title="<?php esc_html_e('View Product Full Details','shopengine')?>" target="_blank" href="<?php echo esc_url($product->get_permalink()) ?>">
                         <?php echo esc_html($product->get_name()) ?>
                     </a>
                 </p>
             </td>
 
             <td>
-				<?php echo \ShopEngine\Utils\Helper::render($product->get_price_html()); ?>
+				<?php
+                shopengine_content_render(\ShopEngine\Utils\Helper::render($product->get_price_html()));
+                ?>
             </td>
 
             <td>
@@ -42,7 +42,7 @@
                             echo esc_html__('In Stock', 'shopengine');
                             break;
                         default:
-                        echo $product->get_stock_status();
+                        echo esc_html($product->get_stock_status());
                     }
                 ?>
             </td>

@@ -89,7 +89,6 @@ class ShopEngine_Archive_Description extends \ShopEngine\Base\Widget
 		);
 
 		$this->end_controls_section();
-
 	}
 
 	protected function screen() {

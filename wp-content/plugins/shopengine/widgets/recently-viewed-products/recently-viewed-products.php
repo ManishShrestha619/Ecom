@@ -1590,7 +1590,6 @@ class Shopengine_Recently_Viewed_Products extends \ShopEngine\Base\Widget {
 		);
 
 		$this->end_controls_section();
-
     }
 
 	protected function screen() {

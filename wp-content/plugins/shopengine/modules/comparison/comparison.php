@@ -15,8 +15,8 @@ class Comparison {
 
 	public function init() {
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Just checking current page
 		if(!empty($_REQUEST['shopengine_quickview'])) {
-
 			// In quickview modal we will not show anything
 			return;
 		}
@@ -55,7 +55,6 @@ class Comparison {
 
 
 		add_action( 'woocommerce_admin_process_product_object', [new Group_Meta(), 'index'], 10, 1 );
-
 	}
 
 
@@ -103,8 +102,7 @@ class Comparison {
 			return false;
 		}
 
-		$content = explode(',', $_COOKIE[Comparison::COOKIE_KEY]);
-
+		$content = explode(',', sanitize_text_field( wp_unslash( $_COOKIE[Comparison::COOKIE_KEY] ) ) );
 
 		return in_array($idd, $content);
 	}
@@ -133,14 +131,14 @@ class Comparison {
 		$cls          = $exist ? 'active' : 'inactive';
 		$compare_icon = '<i class="shopengine-icon-product_compare_1"></i>';
 
-		echo Helper::kses($left_text); ?>
+		echo wp_kses($left_text, Helper::get_kses_array()); ?>
 
     <a
             data-payload='{"pid":<?php echo intval($pid) ?>}'
-            class="<?php echo self::ONCLICK_SELECTOR_CLS ?> shopengine-comparison badge <?php echo esc_attr($cls) ?>"
-    > <?php echo Helper::kses($compare_icon) ?> </a><?php
+            class="<?php echo esc_attr(self::ONCLICK_SELECTOR_CLS) ?> shopengine-comparison badge <?php echo esc_attr($cls) ?>"
+    > <?php echo wp_kses($compare_icon, Helper::get_kses_array()) ?> </a><?php
 
-		echo Helper::kses($right_text);
+		echo wp_kses($right_text, Helper::get_kses_array());
 	}
 
 

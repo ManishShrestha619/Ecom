@@ -1655,8 +1655,7 @@ class ShopEngine_Related extends \ShopEngine\Base\Widget
 	protected function screen() {
 
 		$settings = $this->get_settings_for_display();
-
-		echo \ShopEngine\Utils\Helper::render($this->render_view($settings));
+		shopengine_content_render(\ShopEngine\Utils\Helper::render($this->render_view($settings)));
 	}
 
 	protected function render_view($settings = []) {

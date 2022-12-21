@@ -7,6 +7,7 @@ namespace ShopEngine\Modules\Comparison;
 use ShopEngine\Core\Register\Module_List;
 use ShopEngine\Modules\Swatches\Helper;
 use ShopEngine\Modules\Swatches\Swatches;
+use ShopEngine\Utils\Helper as UtilsHelper;
 use WC_Product;
 
 class Comparison_Field_Value {
@@ -96,7 +97,7 @@ class Comparison_Field_Value {
 				?>
                 <tr>
                     <th style="vertical-align: middle;">  <?php
-						echo $slug ?> </th>
+						echo esc_html($slug) ?> </th>
 					<?php
 					$this->print_attributes( $slug, $attributes ); ?>
                 </tr>
@@ -110,7 +111,7 @@ class Comparison_Field_Value {
 				?>
                 <tr>
                     <th style="vertical-align: middle;">  <?php
-						echo ucwords( preg_replace( '~([^a-z0-9\-])~i', ' ', $meta ) ) ?> </th>
+						echo esc_html(ucwords( preg_replace( '~([^a-z0-9\-])~i', ' ', $meta ) )) ?> </th>
 					<?php
 					$this->print_custom_meta( $meta ); ?>
                 </tr>
@@ -121,7 +122,7 @@ class Comparison_Field_Value {
 				?>
                 <tr>
                     <th style="vertical-align: middle;">  <?php
-						echo ucwords( str_replace( '_', ' ', $slug ) ) ?> </th>
+						echo esc_html(ucwords( str_replace( '_', ' ', $slug ) )) ?> </th>
 					<?php
 					$this->print_color_attribute( $slug, $data ); ?>
                 </tr>
@@ -132,7 +133,7 @@ class Comparison_Field_Value {
 				?>
                 <tr>
                     <th style="vertical-align: middle;">  <?php
-						echo ucwords( str_replace( '_', ' ', $slug ) ) ?> </th>
+						echo esc_html(ucwords( str_replace( '_', ' ', $slug ) )) ?> </th>
 					<?php
 					$this->print_tr( $slug, $data ); ?>
                 </tr>
@@ -173,7 +174,7 @@ class Comparison_Field_Value {
 			}
 			$cart = esc_html__("Go Cart Page", "shopengine");
 
-			echo apply_filters(
+			$html = apply_filters(
 				'woocommerce_modal_add_to_cart_link', // WPCS: XSS ok.
 				sprintf(
 					'<a title="' . $cart . '" href="%s" data-quantity="%s" class="%s" %s>%s</a>',
@@ -186,6 +187,8 @@ class Comparison_Field_Value {
 				$product,
 				$args
 			);
+
+			echo wp_kses($html, UtilsHelper::get_kses_array());
 		}
 	}
 
@@ -195,10 +198,11 @@ class Comparison_Field_Value {
 			 ?>
 			<td class="first--row">
 				<?php
-				echo sprintf( '<a class="shopengine-remove-action badge-comparison" data-pid="%s"><i class="eicon-close"></i> %s</a>', esc_attr( $product_id ), esc_html__( 'Remove', 'shopengine' ) );
-				echo $datum;
-				echo isset($data['title'][ $product_id ]) ? '<h4>'.$data['title'][ $product_id ].'</h4>': '';
-				echo isset($data['price'][ $product_id ]['htm']) ? '<div>'.$data['price'][ $product_id ]['htm'].'</div>': '';
+				$remove_button = sprintf( '<a class="shopengine-remove-action badge-comparison" data-pid="%s"><i class="eicon-close"></i> %s</a>', esc_attr( $product_id ), esc_html__( 'Remove', 'shopengine' ) );
+				echo wp_kses($remove_button, UtilsHelper::get_kses_array());
+				echo wp_kses($datum, UtilsHelper::get_kses_array());
+				echo wp_kses((isset($data['title'][ $product_id ]) ? '<h4>'.$data['title'][ $product_id ].'</h4>': ''), UtilsHelper::get_kses_array());
+				echo wp_kses((isset($data['price'][ $product_id ]['htm']) ? '<div>'.$data['price'][ $product_id ]['htm'].'</div>': ''), UtilsHelper::get_kses_array());
 				?>
 				<div class="comparison-add-to-cart">
 					<?php $this->get_add_to_cart( $product );?>
@@ -216,7 +220,7 @@ class Comparison_Field_Value {
             <td class="first--row">
 				<?php
 					foreach ( $attribute as $value ) {
-						echo '<span class="comparison-attribute-badge">' . $value . '</span> ';
+						echo wp_kses('<span class="comparison-attribute-badge">' . $value . '</span> ', UtilsHelper::get_kses_array());
 					}
 				?>
             </td>
@@ -229,7 +233,6 @@ class Comparison_Field_Value {
 		for ($x = 1; $x <= $need_tds; $x++) {
 			echo '<td class="first--row"></td>';
 		}
-
 	}
 
 	private function print_custom_meta( $slug) {
@@ -242,16 +245,15 @@ class Comparison_Field_Value {
 
 			    if ( gettype( $meta_value ) == 'array' ) {
 				    foreach ( $meta_value as $value ) {
-					    echo '<span class="comparison-meta-badge" > ' . $value . '</span> ';
+						echo wp_kses('<span class="comparison-meta-badge" > ' . $value . '</span> ', UtilsHelper::get_kses_array());
 				    }
 			    } else {
-				    echo get_post_meta( $product_id, $slug, true );
+				    echo esc_html(get_post_meta( $product_id, $slug, true ));
 			    }
 
 			    echo '</td>';
 		    }
 		}
-
 	}
 
 	private function print_color_attribute( $slug, $data ) {
@@ -262,7 +264,7 @@ class Comparison_Field_Value {
 
 				foreach ( $datum as $attribute ) {
 					foreach ( $attribute['value'] as $value ) {
-						echo '<span class="comparison-color-badge" style="background-color:' . $value . '"></span> ';
+						echo wp_kses('<span class="comparison-color-badge" style="background-color:' . $value . '"></span> ', UtilsHelper::get_kses_array());
 					}
 				}
 				?>
@@ -279,8 +281,7 @@ class Comparison_Field_Value {
 			}
 			?>
             <td class="first--row">
-				<?php
-				echo $datum ?>
+				<?php echo wp_kses($datum, UtilsHelper::get_kses_array()) ?>
             </td>
 
 			<?php

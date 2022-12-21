@@ -10,9 +10,9 @@ if(is_archive() && !is_shop() && !is_product_tag()) {
 
 ?>
 <div class="shopengine-advanced-search">
-    <form method="GET" action="<?php echo get_rest_url(null, 'shopengine/v1/advanced-search'); ?>/"
+    <form method="GET" action="<?php echo esc_url( get_rest_url(null, 'shopengine/v1/advanced-search') ); ?>/"
           class="shopengine-search-form">
-        <input type="hidden" name="nonce" value="<?php echo wp_create_nonce('wp_rest'); ?>"/>
+        <?php wp_nonce_field('wp_rest', 'nonce'); ?>
         <input type="hidden" name="post_type" value="product"/>
 
         <div class="search-input-group">
@@ -32,7 +32,7 @@ if(is_archive() && !is_shop() && !is_product_tag()) {
             <!-- search category -->
             <div class="shopengine-category-select-wraper">
                 <select class="shopengine-ele-nav-search-select" name="product_cat">
-                    <option value=""><?php echo !empty($settings['shopengine_advanced_search_title_all']) ? $settings['shopengine_advanced_search_title_all'] : ''; ?></option>
+                    <option value=""><?php echo !empty($settings['shopengine_advanced_search_title_all']) ?  esc_html($settings['shopengine_advanced_search_title_all']) : ''; ?></option>
 					<?php if(is_array($cats) && !empty($cats)): ?>
 						<?php foreach($cats as $cat) { ?>
                             <option

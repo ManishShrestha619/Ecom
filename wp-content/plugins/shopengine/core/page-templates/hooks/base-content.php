@@ -13,8 +13,9 @@ class Base_Content{
     public function set_tpl_data($id, $slug) {
 
         if(!empty($_GET['change_template']) && !empty($_GET['shopengine_template_id']) && !empty($_GET['preview_nonce'])){
-            if(1 === wp_verify_nonce($_GET['preview_nonce'], 'template_preview_' . $_GET['shopengine_template_id'])){
-                $id = $this->get_revision_or_main_post($_GET['shopengine_template_id']);
+            $shopengine_template_id = sanitize_text_field(wp_unslash($_GET['shopengine_template_id']));
+            if(1 === wp_verify_nonce(sanitize_text_field(wp_unslash($_GET['preview_nonce'])), 'template_preview_' . $shopengine_template_id)){
+                $id = $this->get_revision_or_main_post($shopengine_template_id);
             }
         }
 
@@ -47,6 +48,7 @@ class Base_Content{
 
 	public function load_content_designed_from_builder($base = null) {
 
+        //phpcs:ignore WordPress.Security.NonceVerification.Recommended -- It's a fronted user part, not possible to verify nonce here
         if((isset($_GET['elementor-preview']) && $_GET['elementor-preview'] == $this->prod_tpl_id) || is_preview()){ } else {
             add_filter('the_content', [$this, 'content_filter']);
         }

@@ -1275,8 +1275,6 @@ class ShopEngine_Advanced_Search extends \ShopEngine\Base\Widget
 		);
 
 		$this->end_controls_section();
-
-
 	}
 
 	private function generate_order_item_css($order_items) {
@@ -1295,8 +1293,9 @@ class ShopEngine_Advanced_Search extends \ShopEngine\Base\Widget
 				$styles .= $parent_class . ' .shopengine-category-select-wraper  {order: '. $order_number .';}';
 			}
 		}
-
-		echo '<style>'.$styles.'</style>';
+		echo '<style>';
+		shopengine_content_render($styles);
+		echo '</style>';
 	}
 
 	protected function screen() {

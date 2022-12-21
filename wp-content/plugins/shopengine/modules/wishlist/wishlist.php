@@ -58,7 +58,7 @@ class Wishlist {
 				$content = get_user_meta($uid, self::UMK_WISHLIST, true);
 				$content = empty($content) ? [] : $content;
 
-				$cck = explode(',', $_COOKIE[Wishlist::COOKIE_KEY]);
+				$cck = explode(',', sanitize_text_field( wp_unslash( $_COOKIE[Wishlist::COOKIE_KEY] ) ));
 
 				foreach ($cck as $pid) {
 
@@ -123,7 +123,7 @@ class Wishlist {
 			return false;
 		}
 
-		$content = explode(',', $_COOKIE[Wishlist::COOKIE_KEY]);
+		$content = explode(',', sanitize_text_field(wp_unslash($_COOKIE[Wishlist::COOKIE_KEY])));
 
 		return in_array($idd, $content);
 	}
@@ -139,10 +139,10 @@ class Wishlist {
 
 	?>
 
-	<button title="<?php esc_html_e('Add to Wishlist','shopengine')?>" class="<?php echo self::ONCLICK_SELECTOR_CLS ?> shopengine-wishlist badge <?php echo esc_attr($cls) ?>" data-pid="<?php echo intval($pid) ?>">
-		<?php echo Helper::kses($left_text) ?>
+	<button title="<?php esc_html_e('Add to Wishlist','shopengine')?>" class="<?php echo esc_attr(self::ONCLICK_SELECTOR_CLS) ?> shopengine-wishlist badge <?php echo esc_attr($cls) ?>" data-pid="<?php echo intval($pid) ?>">
+		<?php echo wp_kses($left_text, Helper::get_kses_array()) ?>
 		<i class="shopengine-icon-add_to_favourite_1"></i>
-		<?php echo Helper::kses($right_text) ?>
+		<?php echo wp_kses($right_text, Helper::get_kses_array()) ?>
 	</button>
 
 	<?php

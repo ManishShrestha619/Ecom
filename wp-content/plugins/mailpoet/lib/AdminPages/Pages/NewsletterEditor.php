@@ -12,6 +12,7 @@ use MailPoet\Form\Util\CustomFonts;
 use MailPoet\Newsletter\Shortcodes\ShortcodesHelper;
 use MailPoet\Settings\SettingsController;
 use MailPoet\Settings\UserFlagsController;
+use MailPoet\Subscribers\ConfirmationEmailCustomizer;
 use MailPoet\Subscribers\SubscribersRepository;
 use MailPoet\WooCommerce\Helper as WooCommerceHelper;
 use MailPoet\WooCommerce\TransactionalEmailHooks;
@@ -108,6 +109,8 @@ class NewsletterEditor {
       $woocommerceData = array_merge($wcEmailSettings, $woocommerceData);
     }
 
+    $confirmationEmailTemplateId = (int)$this->settings->get(ConfirmationEmailCustomizer::SETTING_EMAIL_ID, null);
+
     $data = [
       'customFontsEnabled' => $this->customFonts->displayCustomFonts(),
       'shortcodes' => $this->shortcodesHelper->getShortcodes(),
@@ -117,6 +120,8 @@ class NewsletterEditor {
       'sub_menu' => Menu::EMAILS_PAGE_SLUG,
       'woocommerce' => $woocommerceData,
       'is_wc_transactional_email' => $newsletterId === $woocommerceTemplateId,
+      'is_confirmation_email_template' => $newsletterId === $confirmationEmailTemplateId,
+      'is_confirmation_email_customizer_enabled' => (bool)$this->settings->get('signup_confirmation.use_mailpoet_editor', false),
     ];
     $this->wp->wpEnqueueMedia();
     $this->wp->wpEnqueueStyle('editor', $this->wp->includesUrl('css/editor.css'));

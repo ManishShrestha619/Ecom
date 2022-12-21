@@ -40,8 +40,8 @@
 	 * @hooked woocommerce_product_archive_description - 10
 	 */
 
-	if ( is_product_category() || is_product_tag() ) { 
-		echo get_the_archive_description();
+	if ( is_product_category() || is_product_tag() ) {
+        shopengine_content_render(get_the_archive_description());
 	}
 
 	?>

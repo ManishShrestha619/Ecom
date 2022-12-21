@@ -7,7 +7,7 @@ $in_editor_mode = \ShopEngine\Core\Template_Cpt::TYPE == get_post_type();
 		// Show only in the Editor and Preview Mode.
 		if ( $in_editor_mode ):
 			$product = \ShopEngine\Widgets\Products::instance()->get_product(get_post_type());
-			echo \ShopEngine\Utils\Helper::render($product->get_description());
+			shopengine_content_render(\ShopEngine\Utils\Helper::render($product->get_description()));
 				
 		else: // Show in the Frontend.
 			the_content();

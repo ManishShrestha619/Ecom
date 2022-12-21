@@ -1,4 +1,7 @@
 <?php
+
+use ShopEngine\Utils\Helper;
+
 defined('ABSPATH') || exit;
 // product query
 $args = [
@@ -148,7 +151,7 @@ switch ($product_by) {
 		$args['post__in'] = wc_get_product_ids_on_sale();
 		break;
 	case 'viewed':
-		$viewed_products        = !empty($_COOKIE['woocommerce_recently_viewed']) ? (array) explode('|', wp_unslash($_COOKIE['woocommerce_recently_viewed'])) : [];
+		$viewed_products        = !empty($_COOKIE['woocommerce_recently_viewed']) ? (array) explode('|', sanitize_text_field(wp_unslash($_COOKIE['woocommerce_recently_viewed']))) : [];
 		$viewed_products        = array_reverse(array_filter(array_map('absint', $viewed_products)));
 		$query_args['post__in'] = $viewed_products;
 		break;
@@ -173,8 +176,8 @@ $productQuery = new \WP_Query($args);
 						<div class="product-thumb">
 
 							<!-- product thumb -->
-							<a title="<?php esc_html_e('View Product Full Details','shopengine')?>" href="<?php echo get_the_permalink(); ?>">
-								<?php echo woocommerce_get_product_thumbnail($product->get_id()); ?>
+							<a title="<?php esc_attr_e('View Product Full Details','shopengine')?>" href="<?php echo esc_url(get_the_permalink()); ?>">
+								<?php shopengine_content_render(woocommerce_get_product_thumbnail($product->get_id())); ?>
 							</a>
 
 							<!-- add to cart -->
@@ -196,7 +199,7 @@ $productQuery = new \WP_Query($args);
 											<li class="badge no-link off">
 												<?php
 													$percentage = round((($product->get_regular_price() - $product->get_sale_price()) / $product->get_regular_price()) * 100);
-													echo sprintf('%1$s%2$s%3$s', '-', $percentage, '%');
+													echo esc_html(sprintf('%1$s%2$s%3$s', '-', $percentage, '%'));
 												?>
 											</li>
 									<?php endif;} ?>
@@ -265,9 +268,9 @@ $productQuery = new \WP_Query($args);
                         <a title="<?php esc_html_e('View Product Full Details','shopengine')?>" href="<?php the_permalink();?>">
 							<?php
                                 if (isset($title_character) && !empty($title_character)):
-                                    echo substr(get_the_title(), 0, $title_character);
+                                    echo esc_html(substr(get_the_title(), 0, $title_character));
                                 else:
-                                    echo get_the_title();
+                                    echo esc_html(get_the_title());
                                 endif;
                             ?>
                         </a>
@@ -279,11 +282,10 @@ $productQuery = new \WP_Query($args);
                             if ($product->get_rating_count() > 0) {
                                 woocommerce_template_loop_rating();
                             } else {
-                                echo sprintf('<div class="star-rating">%1$s</div>', wc_get_star_rating_html(0, 0));
+                                shopengine_content_render(sprintf('<div class="star-rating">%1$s</div>', wc_get_star_rating_html(0, 0)));
                             }
 
-                            // review count
-                            echo sprintf('<span class="rating-count">(%1$s)</span>', $product->get_review_count());
+                            echo wp_kses(sprintf('<span class="rating-count">(%1$s)</span>', $product->get_review_count()), Helper::get_kses_array());
                         ?>
                     </div>
 

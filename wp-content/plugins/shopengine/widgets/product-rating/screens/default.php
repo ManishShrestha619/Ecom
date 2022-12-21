@@ -29,9 +29,9 @@ $average      = $product->get_average_rating();
 	<?php if($is_editor) : ?>
 
 		<div class="woocommerce-product-rating">
-			<?php echo wc_get_rating_html( $average, $rating_count ); // WPCS: XSS ok. ?>
+			<?php shopengine_content_render( wc_get_rating_html( $average, $rating_count ) ); ?>
 			<a title="<?php esc_html_e('Product Reviews','shopengine')?>" href="#reviews" class="woocommerce-review-link" rel="nofollow">
-				(<?php printf( _n( '%s '. $shopengine_rating_singular_label, '%s ' . $shopengine_rating_plural_label, $rating_count, 'shopengine' ), '<span class="count">' . esc_html( $review_count ) . '</span>' ); ?>)
+				(<?php shopengine_content_render(sprintf( _n( '%s '. $shopengine_rating_singular_label, '%s ' . $shopengine_rating_plural_label, $rating_count, 'shopengine' ), '<span class="count">' . esc_html( $review_count ) . '</span>' )); ?>)
 			</a>
 		</div>
 
@@ -45,7 +45,7 @@ $average      = $product->get_average_rating();
 		if ( $rating_count > 0 ) : ?>
 
 			<div class="woocommerce-product-rating">
-				<?php echo wc_get_rating_html( $average, $rating_count ); // WPCS: XSS ok. ?>
+				<?php shopengine_content_render( wc_get_rating_html( $average, $rating_count ) ); ?>
 				<?php if ( comments_open() ) : ?>
 					<?php //phpcs:disable ?>
 					<a title="<?php esc_html_e('Product Reviews','shopengine')?>" href="#reviews" class="woocommerce-review-link" rel="nofollow">(<?php printf( _n( '%s ' . $shopengine_rating_singular_label, '%s ' . $shopengine_rating_plural_label, $review_count, 'shopengine' ), '<span class="count">' . esc_html( $review_count ) . '</span>' ); ?>)</a>

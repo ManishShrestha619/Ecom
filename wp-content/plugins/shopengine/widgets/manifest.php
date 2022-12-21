@@ -22,6 +22,13 @@ class Manifest{
 
 		add_action('elementor/elements/categories_registered', [$this, 'widget_categories']);
 		add_action('elementor/widgets/widgets_registered', [$this, 'register_widgets']);
+
+		add_filter('woocommerce_default_address_fields', function($fields) {
+			foreach ($fields as $key => $value) {
+				unset($fields[$key]['priority']);
+			}
+			return $fields;
+		});
 	}
 
 	public function manifest_widgets() {
@@ -68,9 +75,7 @@ class Manifest{
 
 				\Elementor\Plugin::instance()->widgets_manager->register_widget_type(new $widget['base_class']());
 			}
-
 		}
-
 	}
 
 	public function widget_categories($elements_manager) {

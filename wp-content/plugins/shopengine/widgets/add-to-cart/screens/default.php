@@ -10,7 +10,7 @@
 
 		if($product->get_stock_status() != 'instock') {
 
-			echo esc_html__('To see the add to cart button , please set stock status as instock for - .', 'shopengine') . '"' . $product->get_name() . '"';
+			echo esc_html__('To see the add to cart button , please set stock status as instock for - .', 'shopengine') . '"' . esc_html( $product->get_name() ) . '"';
 		}
 	}
 
@@ -31,7 +31,8 @@
 
 		add_action('woocommerce_before_add_to_cart_quantity', function () use ($btn_arg) {
 
-			echo sprintf('<div class="quantity-wrap %1$s">', $btn_arg['position']);
+			echo wp_kses(sprintf('<div class="quantity-wrap %1$s">', $btn_arg['position']), \ShopEngine\Utils\Helper::get_kses_array());
+
 
 			if($btn_arg['position'] === 'before') { ?>
 				<div class="shopengine-qty-btn">
@@ -48,7 +49,6 @@
 						class="minus"> <?php \Elementor\Icons_Manager::render_icon($btn_arg['minus_icon'], ['aria-hidden' => 'true']); ?> </button>
 				<?php
 			}
-
 		});
 
 		add_action('woocommerce_after_add_to_cart_quantity', function () use ($btn_arg) {

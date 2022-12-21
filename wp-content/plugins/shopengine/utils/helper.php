@@ -54,7 +54,7 @@ class Helper {
 		if(isset($info['query'])){
 			parse_str( $info['query'], $query );
 		}
-		return $info['scheme'] . '://' . $info['host'] .( $info['path'] ?? '' ). '?' . http_build_query( $query ? array_merge( $query, $param ) : $param );
+		return (isset($info['scheme']) ? $info['scheme'] . '://' : '')  . ($info['host'] ?? '') .( $info['path'] ?? '' ). '?' . http_build_query( $query ? array_merge( $query, $param ) : $param );
 	}
 
 
@@ -77,10 +77,16 @@ class Helper {
 	{
 		return [
 			'a'                             => [
-				'class' => [],
-				'href'  => [],
-				'rel'   => [],
-				'title' => [],
+				'class'            => [],
+				'href'             => [],
+				'rel'              => [],
+				'title'            => [],
+				'target'           => [],
+				'data-quantity'    => [],
+				'data-product_id'  => [],
+				'data-product_sku' => [],
+				'data-pid'         => [],
+				'aria-label'       => [],
 			],
 			'abbr'                          => [
 				'title' => [],
@@ -130,11 +136,15 @@ class Helper {
 				'class' => [],
 			],
 			'img'                           => [
-				'alt'    => [],
-				'class'  => [],
-				'height' => [],
-				'src'    => [],
-				'width'  => [],
+				'alt'      => [],
+				'class'    => [],
+				'height'   => [],
+				'src'      => [],
+				'width'    => [],
+				'decoding' => [],
+				'loading'  => [],
+				'srcset'   => [],
+				'sizes'    => []
 			],
 			'li'                            => [
 				'class' => [],
@@ -172,6 +182,12 @@ class Helper {
 			'ul'                            => [
 				'class' => [],
 			],
+			'button' => [
+				'class' => [],
+				'title' => [],
+				'data-share-url' => [],
+				'data-message' => []
+			]
 		];
 	}
 
@@ -267,7 +283,7 @@ class Helper {
 						<?php endif; ?>
                         <li class="badge tag">
                             <a title="<?php echo esc_html($term->name,'shopengine');?>" <?php if(!empty($bg)) : ?>style="background-color:<?php echo esc_attr($bg); ?>" <?php endif; ?>
-                               href="<?php echo get_term_link($term->term_id); ?>"><?php echo esc_html($term->name); ?></a>
+                               href="<?php echo esc_url(get_term_link($term->term_id)); ?>"><?php echo esc_html($term->name); ?></a>
                         </li>
 					<?php endif;
 
@@ -281,13 +297,12 @@ class Helper {
 		endif;
 	}
 
-
 	public static function _product_image($settings = null) {
 		global $product;
 		?>
         <div class='product-thumb'>
-            <a title="<?php esc_html_e('Product Thumbnail','shopengine')?>" href="<?php echo get_the_permalink(); ?>">
-				<?php echo woocommerce_get_product_thumbnail($product->get_id()); ?>
+            <a title="<?php esc_html_e('Product Thumbnail','shopengine')?>" href="<?php echo esc_url(get_the_permalink()); ?>">
+				<?php shopengine_content_render(woocommerce_get_product_thumbnail($product->get_id())) ?>
             </a>
 
             <!-- end sale date -->
@@ -331,7 +346,7 @@ class Helper {
 			];
 
 			?>
-            <div data-prefix="<?php echo !empty($settings['counter_prefix']) ? $settings['counter_prefix'] : ''; ?>"
+            <div data-prefix="<?php echo !empty($settings['counter_prefix']) ? esc_attr($settings['counter_prefix']) : ''; ?>"
                  class="product-end-sale-timer <?php echo !empty($settings['counter_position']) ? 'counter-position-' . esc_attr($settings['counter_position']) : ''; ?>"
                  data-config='<?php echo json_encode($config); ?>'
                  data-date="<?php echo esc_attr($formatted_date); ?>"></div>
@@ -350,7 +365,7 @@ class Helper {
 			echo "<div class='product-category'><ul>";
 			foreach($terms as $key => $term) {
 				$sperator = $key !== ($terms_count - 1) ? ',' : '';
-				echo "<li><a title='" . $category . "' href='" . get_term_link($term->term_id) . "'>" . esc_html($term->name) . $sperator . "</a></li>";
+				echo "<li><a title='" . esc_attr($category) . "' href='" . esc_url(get_term_link($term->term_id)) . "'>" . esc_html($term->name) . esc_url($sperator) . "</a></li>";
 			}
 			echo "</ul></div>";
 		}
@@ -376,7 +391,7 @@ class Helper {
 		global $product;
 		?>
         <h3 class='product-title'>
-            <a title="<?php esc_html_e('View Product Details','shopengine')?>" href="<?php echo get_the_permalink($product->get_id()); ?>"><?php echo get_the_title($product->get_id()); ?></a>
+            <a title="<?php esc_html_e('View Product Details','shopengine')?>" href="<?php echo esc_url(get_the_permalink($product->get_id())); ?>"><?php echo esc_html(get_the_title($product->get_id())); ?></a>
         </h3>
 		<?php
 	}
@@ -390,11 +405,11 @@ class Helper {
 			if($product->get_rating_count() > 0) {
 				woocommerce_template_loop_rating();
 			} else {
-				echo sprintf('<div class="star-rating">%1$s</div>', wc_get_star_rating_html(0, 0));
+				shopengine_content_render(sprintf('<div class="star-rating">%1$s</div>', wc_get_star_rating_html(0, 0)));
 			}
 
 			// review count
-			echo sprintf('<span class="rating-count">(%1$s)</span>', $product->get_review_count());
+			shopengine_content_render(sprintf('<span class="rating-count">(%1$s)</span>', $product->get_review_count()));
 			?>
         </div>
 		<?php
@@ -414,7 +429,7 @@ class Helper {
 		$product_data = $product->get_data($product->get_id());
 		?>
         <div class="prodcut-description">
-			<?php echo apply_filters('shopengine_product_short_description', $product_data['description']); ?>
+			<?php shopengine_content_render(apply_filters('shopengine_product_short_description', $product_data['description']))?>
         </div>
 
 		<?php
@@ -441,14 +456,13 @@ class Helper {
 
 		global $wpdb;
 
-		$qry = 'SELECT sum(lookup.product_qty) as total FROM `'.$wpdb->prefix.'wc_order_product_lookup` as lookup';
-		$qry .=' LEFT JOIN '.$wpdb->prefix.'wc_order_stats AS stat on lookup.order_id = stat.order_id ';
-		$qry .=' WHERE `product_id` = '.intval($product_id).' and variation_id = '.intval($variation_id);
-		$qry .= ' and stat.status NOT IN (\'wc-cancelled\', \'wc-refunded\') ;';
-        $result =  $wpdb->get_row($qry);
-		$total = is_object($result) ? $result->total : 0;
+		$result = $wpdb->get_row( $wpdb->prepare( "SELECT sum(lookup.product_qty) as total FROM `'.$wpdb->prefix.'wc_order_product_lookup` as lookup 
+					LEFT JOIN '.$wpdb->prefix.'wc_order_stats AS stat on lookup.order_id = stat.order_id 
+					WHERE `product_id` = %d and variation_id = %d 
+					and stat.status NOT IN (\'wc-cancelled\', \'wc-refunded\')", intval( $product_id ), intval( $variation_id ) ) );
+		$total = is_object( $result ) ? $result->total : 0;
 
-		return  intval( $total ) ;
+		return intval( $total );
 	}
 
 
@@ -466,17 +480,14 @@ class Helper {
 	private static function generate_products_meta() {
 		global $wpdb;
 		$post_type = 'product';
-		$query     = "
-        SELECT DISTINCT($wpdb->postmeta.meta_key) 
+		$meta_keys = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT($wpdb->postmeta.meta_key) 
         FROM $wpdb->posts 
         LEFT JOIN $wpdb->postmeta 
         ON $wpdb->posts.ID = $wpdb->postmeta.post_id 
-        WHERE $wpdb->posts.post_type = '%s' 
+        WHERE $wpdb->posts.post_type = %s 
         AND $wpdb->postmeta.meta_key != '' 
         AND $wpdb->postmeta.meta_key NOT RegExp '(^[_0-9].+$)' 
-        AND $wpdb->postmeta.meta_key NOT RegExp '(^[0-9]+$)'
-    ";
-		$meta_keys = $wpdb->get_col( $wpdb->prepare( $query, $post_type ) );
+        AND $wpdb->postmeta.meta_key NOT RegExp '(^[0-9]+$)'", $post_type ) );
 		//set_transient( 'shopengine-all-products_meta_keys', $meta_keys, 60 * 60 * 0.01 );
 
 		return $meta_keys;
@@ -501,5 +512,37 @@ class Helper {
 
 	public static function get_admin_list_template_url(){
 		return get_admin_url(null, 'edit.php?post_type=' . Template_Cpt::TYPE . Template_Cpt ::TEMPLATE_SECTION_ID);
+	}
+
+	public static function get_checkout_input_fields(string $form_type = 'billing')
+	{
+		$checkout = WC()->checkout();
+		$fields   = $checkout->get_checkout_fields($form_type);
+
+		$billing_fields = [];
+
+		foreach ($fields as $key => $field) {
+			$array = ['list_key' => $key, 'list_title' => $field['label']];
+			array_push($billing_fields, $array);
+		}
+
+		return $billing_fields;
+	}
+
+	public static function order_checkout_fields($settings, $form_type = 'billing')
+	{
+		WC()->checkout()->checkout_fields = null;
+
+		add_filter("woocommerce_{$form_type}_fields", function ($fields) use ($settings) {
+			$priority = 10;
+			foreach ($settings as $input) {
+				$key = $input['list_key'];
+				if (isset($fields[$key])) {
+					$fields[$key]['priority'] = $priority;
+					$priority += 10;
+				}
+			}
+			return $fields;
+		});
 	}
 }

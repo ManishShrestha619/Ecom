@@ -41,7 +41,7 @@ if(get_post_type() == \ShopEngine\Core\Template_Cpt::TYPE) {
 
         <div id="order_review" class="woocommerce-checkout-review-order">
 			<?php do_action('woocommerce_checkout_before_order_review'); ?>
-			<?php woocommerce_order_review(); ?>
+			<?php include_once ShopEngine::widget_dir() . 'checkout-review-order/screens/review-order-template.php'; ?>
         </div>
 		<?php do_action('woocommerce_checkout_after_order_review'); ?>
     </div>

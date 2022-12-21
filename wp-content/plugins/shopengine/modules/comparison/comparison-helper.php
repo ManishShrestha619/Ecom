@@ -104,23 +104,24 @@ class Comparison_Helper {
 							$copy =  esc_html__("Copy To Clipboard","shopengine");
 
 							foreach ( $share_buttons as $share_button ) {
+								$button = '';
 								switch ( $share_button ) {
 									case 'facebook':
-										echo sprintf(
+										$button = sprintf(
 											'<a title="' . $share . '" href="%1$s" target="_blank" rel="noopener noreferrer nofollow "><i class="eicon-facebook"></i> <span>%2$s</span></a>',
 											'https://www.facebook.com/sharer.php?u=' . $share_url,
 											esc_html__('Share on Facebook', 'shopengine')
 										);
 										break;
 									case 'twitter':
-										echo sprintf(
+										$button = sprintf(
 											'<a title="' . $twitter . '" href="%1$s" target="_blank" rel="noopener noreferrer nofollow "><i class="eicon-twitter"></i> <span>%2$s</span></a>',
 											'https://twitter.com/intent/tweet?url=' . $share_url,
 											esc_html__('Share on Twitter', 'shopengine')
 										);
 										break;
 									case 'copy_url':
-										echo sprintf(
+										$button = sprintf(
                     
 											'<button title="' . $copy . '" class="copy-comparison-share-url" data-share-url="%1$s" data-message="%2$s"> <i class="eicon-copy"></i> <span>%3$s</span> </button>',
 											$share_url,
@@ -129,6 +130,7 @@ class Comparison_Helper {
 										);
 										break;
 								}
+								echo wp_kses($button, Helper::get_kses_array());
 							}
 							?>
 						</div>

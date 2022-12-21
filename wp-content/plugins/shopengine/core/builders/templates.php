@@ -33,7 +33,7 @@ class Templates {
 			
 			$nonce_status = apply_filters(
 				'shopengine/demo/bypass_nonce', 
-				(wp_verify_nonce($_GET['preview_nonce'], 'template_preview_' . $_GET['shopengine_template_id']))
+				(wp_verify_nonce(sanitize_text_field(wp_unslash($_GET['preview_nonce'])), 'template_preview_' . sanitize_text_field(wp_unslash($_GET['shopengine_template_id']))))
 			);
 
 			if(1 !== $nonce_status) {

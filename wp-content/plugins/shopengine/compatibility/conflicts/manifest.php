@@ -24,11 +24,13 @@ class Manifest {
 			 * remove unwanted breadcrumb in shop and archive page
 			 */
 			remove_action('woocommerce_before_main_content', 'woocommerce_breadcrumb', 20, 0);
-			remove_action('woocommerce_before_single_product', 'woocommerce_output_all_notices', 10);
 
+			global $is_used_shopengine_template;
+			if($is_used_shopengine_template) {
+				remove_action('woocommerce_before_single_product', 'woocommerce_output_all_notices', 10);
+			}
 		}, 9000, 1);
-	}
-	
+	}	
 
 	public function elementor_editor_conflict($element, $section_id) {
 

@@ -15,8 +15,6 @@ class Checkout extends Base {
 
 	public function init(): void {
 
-		add_action( 'shopengine-order-review-thumbnail', [ $this, 'add_product_thumbnail' ], 10, 4 );
-
 		add_filter('wc_get_template', function ( $template ) {
 			if ( strpos( $template, 'checkout/review-order.php' ) !== false ) {
 				return ShopEngine::widget_dir() . 'checkout-review-order/screens/review-order-template.php';
@@ -54,26 +52,14 @@ class Checkout extends Base {
 	} 
 	
 	protected function get_page_type_option_slug(): string {
-
-		return !empty($_REQUEST['shopengine_quick_checkout']) && $_REQUEST['shopengine_quick_checkout'] === 'modal-content' ? 'quick_checkout' : $this->page_type;
+		if(!empty($_REQUEST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_REQUEST['nonce'])), 'wp_rest')) {
+			return !empty($_REQUEST['shopengine_quick_checkout']) && $_REQUEST['shopengine_quick_checkout'] === 'modal-content' ? 'quick_checkout' : $this->page_type;
+		}
+		return $this->page_type;
 	}
 
 	protected function template_include_pre_condition(): bool {
-
-		return (is_checkout() && !is_wc_endpoint_url('order-received')) || (isset($_REQUEST['wc-ajax']) &&  $_REQUEST['wc-ajax'] == 'update_order_review');
-	}
-
-	public function add_product_thumbnail( $cart_item ) {
-
-		if(!empty($cart_item['product_id'])) {
-			$product    = wc_get_product( intval($cart_item['product_id']) );
-			$product_id = !empty( $cart_item['variation_id'] ) ? intval($cart_item['variation_id']) : $product->get_id();
-			$attachment = wp_get_attachment_image( get_post_thumbnail_id( $product_id ), 'single-post-thumbnail' );
-
-			if(empty($attachment)) {
-				$attachment = wp_get_attachment_image( $product->get_image_id(), 'full' );
-			} 
-			echo $attachment;
-		}
+		//phpcs:ignore WordPress.Security.NonceVerification.Recommended -- It's a fronted user part, not possible to verify nonce here
+		return (is_checkout() && !is_wc_endpoint_url('order-received') && !is_checkout_pay_page()) || (isset($_REQUEST['wc-ajax']) &&  $_REQUEST['wc-ajax'] == 'update_order_review');
 	}
 }

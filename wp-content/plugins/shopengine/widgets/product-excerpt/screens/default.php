@@ -1,5 +1,7 @@
 <?php
 
+use ShopEngine\Utils\Helper;
+
 defined('ABSPATH') || exit;
 
 ?>
@@ -14,7 +16,7 @@ defined('ABSPATH') || exit;
 		if(!$short_description && get_post_type() == \ShopEngine\Core\Template_Cpt::TYPE) {
 			echo esc_html__('Dummy short description only for elementor preview mode if and only if the editor selected product has no short description.', 'shopengine');
 		} else {
-			echo \Shopengine\Utils\Helper::kses($short_description); // WPCS: XSS ok.
+			echo wp_kses($short_description, Helper::get_kses_array());
 		}
 
 		?>

@@ -52,9 +52,9 @@ defined('ABSPATH') || exit;
 									$thumbnail = apply_filters('woocommerce_cart_item_thumbnail', $_product->get_image(), $cart_item, $cart_item_key);
 									$product = esc_html__("View Product Full Details","shopengine");
 									if(!$product_permalink) {
-										echo \ShopEngine\Utils\Helper::render( $thumbnail ); // PHPCS: XSS ok.
+										shopengine_content_render(\ShopEngine\Utils\Helper::render( $thumbnail ));
 									} else {
-										printf('<a title="' . $product . '" href="%s">%s</a>', esc_url($product_permalink), $thumbnail); // PHPCS: XSS ok.
+										shopengine_content_render(sprintf('<a title="' . $product . '" href="%s">%s</a>', esc_url($product_permalink), $thumbnail));
 									} ?> 
 								
 									<!-- remove button -->
@@ -64,19 +64,21 @@ defined('ABSPATH') || exit;
 										ob_start();
 										\Elementor\Icons_Manager::render_icon( $settings['shopengine_table_remove_button_icon_change'], [ 'aria-hidden' => 'true' ] );
 										$remove_icon = ob_get_clean();
-										echo apply_filters( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-											'woocommerce_cart_item_remove_link',
-											sprintf(
-												'<a title="' . $cart . '" href="%s" class="remove" aria-label="%s" data-product_id="%s" data-product_sku="%s">
-												  %s
-												</a>',
-												esc_url(wc_get_cart_remove_url($cart_item_key)),
-												esc_html__('Remove this item', 'shopengine'),
-												esc_attr($product_id),
-												esc_attr($_product->get_sku()),
-												$remove_icon,	
-											),
-											$cart_item_key
+										shopengine_content_render(
+											apply_filters(
+												'woocommerce_cart_item_remove_link',
+												sprintf(
+													'<a title="' . $cart . '" href="%s" class="remove" aria-label="%s" data-product_id="%s" data-product_sku="%s">
+													  %s
+													</a>',
+													esc_url(wc_get_cart_remove_url($cart_item_key)),
+													esc_html__('Remove this item', 'shopengine'),
+													esc_attr($product_id),
+													esc_attr($_product->get_sku()),
+													$remove_icon,	
+												),
+												$cart_item_key
+											)
 										);
 										?>
 									</div>	
@@ -97,7 +99,7 @@ defined('ABSPATH') || exit;
 									do_action('woocommerce_after_cart_item_name', $cart_item, $cart_item_key);
 
 									// Meta data.
-									echo wc_get_formatted_cart_item_data($cart_item); // PHPCS: XSS ok.
+									shopengine_content_render(wc_get_formatted_cart_item_data($cart_item));
 
 									// Backorder notification.
 									if($_product->backorders_require_notification() && $_product->is_on_backorder($cart_item['quantity'])) {
@@ -110,7 +112,7 @@ defined('ABSPATH') || exit;
 							<!-- product price -->
 							<div class="shopengine-table__body-item--td product-price" data-title="<?php esc_attr_e('Price', 'shopengine'); ?>">
 								<?php
-								echo apply_filters('woocommerce_cart_item_price', WC()->cart->get_product_price($_product), $cart_item, $cart_item_key); // PHPCS: XSS ok.
+								shopengine_content_render(apply_filters('woocommerce_cart_item_price', WC()->cart->get_product_price($_product), $cart_item, $cart_item_key));
 								?>
 							</div>
 							
@@ -133,10 +135,10 @@ defined('ABSPATH') || exit;
 											$_product,
 											false
 										);
-										echo "<span data-max=".$_product->get_max_purchase_quantity()." class='plus-button'>&plus;</span>";
+										echo "<span data-max=".intval($_product->get_max_purchase_quantity())." class='plus-button'>&plus;</span>";
 									}
 
-									echo apply_filters('woocommerce_cart_item_quantity', $product_quantity, $cart_item_key, $cart_item); // PHPCS: XSS ok.
+									shopengine_content_render(apply_filters('woocommerce_cart_item_quantity', $product_quantity, $cart_item_key, $cart_item));
 									?>
 								</div>
 
@@ -145,7 +147,7 @@ defined('ABSPATH') || exit;
 							<!-- product subtotal -->
 							<div class="shopengine-table__body-item--td product-subtotal" data-title="<?php esc_attr_e('Subtotal', 'shopengine'); ?>">
 								<?php
-								echo apply_filters('woocommerce_cart_item_subtotal', WC()->cart->get_product_subtotal($_product, $cart_item['quantity']), $cart_item, $cart_item_key); // PHPCS: XSS ok.
+								 shopengine_content_render(apply_filters('woocommerce_cart_item_subtotal', WC()->cart->get_product_subtotal($_product, $cart_item['quantity']), $cart_item, $cart_item_key));
 								?>
 							</div>
 

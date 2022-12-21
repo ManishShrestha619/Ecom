@@ -2,6 +2,7 @@
 
 namespace Elementor;
 
+use ShopEngine\Utils\Helper;
 use ShopEngine\Widgets\Products;
 
 defined('ABSPATH') || exit;
@@ -15,6 +16,34 @@ class ShopEngine_Checkout_Form_Shipping extends \ShopEngine\Base\Widget
 
 	protected function register_controls() {
 		
+		$this->start_controls_section(
+            'shopengine_section_layout',
+            [
+                'label' => esc_html__('Layout', 'shopengine'),
+                'tab'   => Controls_Manager::TAB_CONTENT
+            ]
+        );
+
+        $repeater = new Repeater();
+        $this->add_control(
+            'shopengine_shipping_inputs',
+            [
+                'label'        => esc_html__('Input List', 'shopengine'),
+                'type'         => Controls_Manager::REPEATER,
+                'fields'       => $repeater->get_controls(),
+                'default'      => Helper::get_checkout_input_fields('shipping'),
+                'title_field'  => '{{{ list_title }}}',
+                'item_actions' => [
+                    'add'       => false,
+                    'duplicate' => false,
+                    'remove'    => false,
+                    'sort'      => true
+                ]
+            ]
+        );
+
+        $this->end_controls_section();
+
 		/**
 		 * Checkbox label title content
 		 */
@@ -755,11 +784,14 @@ class ShopEngine_Checkout_Form_Shipping extends \ShopEngine\Base\Widget
 	 * @since 1.0.0
 	 * @access protected
 	 */
-	protected function screen() {
+	protected function screen()
+    {
+        $settings = $this->get_settings_for_display();
 
-		$settings = $this->get_settings_for_display();
-		$tpl = Products::instance()->get_widget_template($this->get_name());
+        Helper::order_checkout_fields($settings['shopengine_shipping_inputs'], 'shipping');
 
-		include $tpl;
-	}
+        $tpl = Products::instance()->get_widget_template($this->get_name());
+
+        include $tpl;
+    }
 }

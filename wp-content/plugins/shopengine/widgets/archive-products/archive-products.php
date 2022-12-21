@@ -328,6 +328,10 @@ class ShopEngine_Archive_Products extends \ShopEngine\Base\Widget
 				'list_title' => esc_html__('Comparison', 'shopengine'),
 				'list_key' => 'comparison',
 			],
+			[
+				'list_title' => esc_html__('Direct Checkout (PRO)', 'shopengine'),
+				'list_key' => 'direct-checkout',
+			],
 		];
 
 		$repeater = new Repeater();
@@ -2422,24 +2426,34 @@ class ShopEngine_Archive_Products extends \ShopEngine\Base\Widget
 
 		foreach ($order_items as $key => $item) {
 			$order_number = $key + 1;
-			if ($item['list_key'] == 'add-to-cart') {
-				$styles .= $parent_class . ' .shopengine-archive-products a.add_to_cart_button  {order: ' . $order_number . ';}';
-				$styles .= $parent_class . ' .shopengine-archive-products a.product_type_variable  {order: ' . $order_number . ';}';
-				$styles .= $parent_class . ' .shopengine-archive-products a.product_type_grouped  {order: ' . $order_number . ';}';
-				$styles .= $parent_class . ' .shopengine-archive-products a.product_type_external  {order: ' . $order_number . ';}'; // this line added by mizan@xpeedstudo.com
-			}
-			if ($item['list_key'] == 'wishlist') {
-				$styles .= $parent_class . ' .shopengine-archive-products .shopengine-wishlist  {order: ' . $order_number . ';}';
-			}
-			if ($item['list_key'] == 'comparison') {
-				$styles .= $parent_class . ' .shopengine-archive-products .shopengine-comparison  {order: ' . $order_number . ';}';
-			}
-			if ($item['list_key'] == 'quick-view') {
-				$styles .= $parent_class . ' .shopengine-archive-products .shopengine-quickview-trigger  {order: ' . $order_number . ';}';
+			switch ($item['list_key']) {
+				case 'add-to-cart':
+					$styles .= $parent_class . ' .shopengine-archive-products a.add_to_cart_button  {order: ' . $order_number . ';}';
+					$styles .= $parent_class . ' .shopengine-archive-products a.product_type_variable  {order: ' . $order_number . ';}';
+					$styles .= $parent_class . ' .shopengine-archive-products a.product_type_grouped  {order: ' . $order_number . ';}';
+					$styles .= $parent_class . ' .shopengine-archive-products a.product_type_external  {order: ' . $order_number . ';}';
+					break;
+
+				case 'wishlist':
+					$styles .= $parent_class . ' .shopengine-archive-products .shopengine-wishlist  {order: ' . $order_number . ';}';
+					break;
+
+				case 'comparison':
+					$styles .= $parent_class . ' .shopengine-archive-products .shopengine-comparison  {order: ' . $order_number . ';}';
+					break;
+					
+				case 'quick-view':
+					$styles .= $parent_class . ' .shopengine-archive-products .shopengine-quickview-trigger  {order: ' . $order_number . ';}';
+					break;
+
+				case 'direct-checkout':
+					$styles .= $parent_class . ' .shopengine-archive-products a.shopengine_direct_checkout  {order: ' . $order_number . ';}';
+					break;
 			}
 		}
-
-		echo '<style>' . $styles . '</style>';
+		echo '<style>';
+		shopengine_content_render($styles);
+		echo '</style>';
 	}
 	
 	protected function screen()
@@ -2456,6 +2470,13 @@ class ShopEngine_Archive_Products extends \ShopEngine\Base\Widget
 
 		if (WC()->session && function_exists('wc_print_notices')) {
 			wc_print_notices();
+		}
+
+		/**
+		 * If ground button disabled and the buttons on hover enabled 
+		 */
+		if( $shopengine_group_btns == false && $shopengine_is_hover_details == 'yes' ){
+			remove_action('woocommerce_after_shop_loop_item', 'woocommerce_template_loop_add_to_cart', 10);
 		}
 
 
