@@ -7,7 +7,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-12-15 17:12+0000\n"
+"POT-Creation-Date: 2022-12-22 21:51+0000\n"
 "Project-Id-Version: undefined\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;"
@@ -3848,12 +3848,23 @@ msgstr ""
 msgid "Before Heading Number"
 msgstr ""
 
-#: framework/extensions/widgets/widgets/ct-about-me/widget.php:13
-msgid "About Me"
-msgstr ""
-
+#: framework/extensions/widgets/widgets/ct-about-me/view.php:12,
 #: framework/extensions/widgets/widgets/ct-about-me/widget.php:14
 msgid "About me"
+msgstr ""
+
+#: framework/extensions/widgets/widgets/ct-about-me/view.php:39,
+#: framework/extensions/widgets/widgets/ct-quote/options.php:49,
+#: framework/extensions/widgets/widgets/ct-quote/view.php:18
+msgid "John Doe"
+msgstr ""
+
+#: framework/extensions/widgets/widgets/ct-about-me/view.php:100
+msgid "View Profile"
+msgstr ""
+
+#: framework/extensions/widgets/widgets/ct-about-me/widget.php:13
+msgid "About Me"
 msgstr ""
 
 #: framework/extensions/widgets/widgets/ct-advertisement/options.php:18,
@@ -4180,11 +4191,6 @@ msgstr ""
 
 #: framework/extensions/widgets/widgets/ct-quote/options.php:46
 msgid "Author Name"
-msgstr ""
-
-#: framework/extensions/widgets/widgets/ct-quote/options.php:49,
-#: framework/extensions/widgets/widgets/ct-quote/view.php:18
-msgid "John Doe"
 msgstr ""
 
 #: framework/extensions/widgets/widgets/ct-quote/options.php:55
